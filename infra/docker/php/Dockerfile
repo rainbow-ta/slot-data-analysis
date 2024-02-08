@@ -22,7 +22,8 @@ RUN <<EOF
     unzip \
     libzip-dev \
     libicu-dev \
-    libonig-dev
+    libonig-dev \
+    curl
   locale-gen en_US.UTF-8
   localedef -f UTF-8 -i en_US en_US.UTF-8
   docker-php-ext-install \
@@ -33,6 +34,9 @@ RUN <<EOF
   composer config -g process-timeout 3600
   composer config -g repos.packagist composer https://packagist.org
 EOF
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+  && apt-get install -y nodejs
 
 FROM base AS development
 
