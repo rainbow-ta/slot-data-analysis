@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Models\Store;
-use App\Models\SlotsData;
+use App\Models\Hall;
+use App\Models\HallData;
 use App\Models\SlotMachine;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -33,10 +33,10 @@ class ScrapeAnaslot extends Command
     public function handle()
     {
         $output = new ConsoleOutput();
-        $stores = Store::select('id', 'ana_slot_url_name')->get();
+        $halls = Hall::select('id', 'ana_slot_url_name')->get();
 
-        if ($stores->isEmpty()) {
-            $this->info('No stores found.');
+        if ($halls->isEmpty()) {
+            $this->info('No halls found.');
             return;
         }
 
@@ -46,14 +46,14 @@ class ScrapeAnaslot extends Command
 
         // プログレスバー開始
         $totalDays = $threeMonthsAgo->diff($today)->days;
-        $progressBar = new ProgressBar($output, $totalDays * count($stores));
+        $progressBar = new ProgressBar($output, $totalDays * count($halls));
         $progressBar->start();
 
         // 直近3ヶ月のデータを取得する
         while ($currentDate <= $today) {
-            foreach ($stores as $store) {
+            foreach ($halls as $hall) {
                 $formattedCurrentDate = $currentDate->format('Y-m-d');
-                $this->processSlotsData($store, $formattedCurrentDate);
+                $this->processHallData($hall, $formattedCurrentDate);
 
                 $progressBar->advance();
             }
@@ -67,24 +67,24 @@ class ScrapeAnaslot extends Command
         $this->info('Scraping completed successfully.');
     }
 
-    private function processSlotsData($store, $formattedCurrentDate)
+    private function processHallData($hall, $formattedCurrentDate)
     {
-        $slotsData = SlotsData::where('date', $formattedCurrentDate)
-            ->where('stores_id', $store->id)
+        $hallData = HallData::where('date', $formattedCurrentDate)
+            ->where('hall_id', $hall->id)
             ->first();
 
-        if ($slotsData) {
+        if ($hallData) {
             return;
         }
 
-        $dataArray = $this->scrape($store, $formattedCurrentDate);
+        $dataArray = $this->scrape($hall, $formattedCurrentDate);
 
         if ($dataArray) {
-            $this->insertSlotsData($dataArray);
+            $this->insertHallData($dataArray);
         }
     }
 
-    private function scrape($store, $formattedDate)
+    private function scrape($hall, $formattedDate)
     {
         // サイトの負荷を軽減するために待機時間を設定
         $sleepTime = rand(1, 5);
@@ -93,7 +93,7 @@ class ScrapeAnaslot extends Command
         $client = new \GuzzleHttp\Client();
         $dataArray = [];
 
-        $url = "https://ana-slo.com/{$formattedDate}-{$store->ana_slot_url_name}-data/";
+        $url = "https://ana-slo.com/{$formattedDate}-{$hall->ana_slot_url_name}-data/";
         $response = $client->request('GET', $url);
         $html = $response->getBody()->getContents();
         $crawler = new Crawler($html);
@@ -106,7 +106,7 @@ class ScrapeAnaslot extends Command
             $tbody = new Crawler($tbodyFirst->html());
         }
 
-        $tbody->filter('tr')->each(function (Crawler $row) use (&$dataArray, $formattedDate, $store) {
+        $tbody->filter('tr')->each(function (Crawler $row) use (&$dataArray, $formattedDate, $hall) {
             $rowData = [];
 
             $row->filter('td')->each(function (Crawler $cell) use (&$rowData) {
@@ -132,7 +132,7 @@ class ScrapeAnaslot extends Command
                     'big_bonus_probability' => $rowData[7] ?? null,
                     'regular_bonus_probability' => $rowData[8] ?? null,
                     'date' => $formattedDate,
-                    'stores_id' => $store->id,
+                    'hall_id' => $hall->id,
                 ];
             } else {
                 $dataArray[] = [
@@ -148,7 +148,7 @@ class ScrapeAnaslot extends Command
                     'regular_bonus_probability' => $rowData[9] ?? null,
                     'art_probability' => $rowData[10] ?? null,
                     'date' => $formattedDate,
-                    'stores_id' => $store->id,
+                    'hall_id' => $hall->id,
                 ];
             }
         });
@@ -156,12 +156,12 @@ class ScrapeAnaslot extends Command
         return $dataArray;
     }
 
-    private function insertSlotsData($dataArray)
+    private function insertHallData($dataArray)
     {
         DB::beginTransaction();
 
         try {
-            SlotsData::insert($dataArray);
+            HallData::insert($dataArray);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();

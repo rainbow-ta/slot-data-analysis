@@ -14,4 +14,9 @@ class SlotMachine extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function hallData()
+    {
+        return $this->hasMany(HallData::class);
+    }
 }
