@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('slots_data', function (Blueprint $table) {
+        Schema::create('hall_data', function (Blueprint $table) {
             $table->id();
             $table->date('date');
             $table->unsignedInteger('slot_number');
@@ -20,12 +20,13 @@ return new class extends Migration
             $table->unsignedInteger('big_bonus_count');
             $table->unsignedInteger('regular_bonus_count');
             $table->unsignedInteger('art_count')->nullable();
-            $table->decimal('synthesis_probability', 10, 6);
-            $table->decimal('big_bonus_probability', 10, 6);
-            $table->decimal('regular_bonus_probability', 10, 6);
-            $table->decimal('art_probability', 10, 6)->nullable();
-            $table->unsignedBigInteger('stores_id');
-            $table->foreign('stores_id')->references('id')->on('stores');
+            $table->decimal('synthesis_probability', 10, 1);
+            $table->decimal('big_bonus_probability', 10, 1);
+            $table->decimal('regular_bonus_probability', 10, 1);
+            $table->decimal('art_probability', 10, 1)->nullable();
+            $table->boolean('is_high_setting')->nullable()->default(0);
+            $table->unsignedBigInteger('hall_id');
+            $table->foreign('hall_id')->references('id')->on('halls');
             $table->unsignedBigInteger('slot_machines_id');
             $table->foreign('slot_machines_id')->references('id')->on('slot_machines');
             $table->timestamps();
@@ -37,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('slots_data');
+        Schema::dropIfExists('hall_data');
     }
 };

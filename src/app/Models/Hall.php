@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SlotsData extends Model
+class Hall extends Model
 {
     use HasFactory;
-
-    protected $table = 'slots_data';
 
     protected $guarded = [
         'id',
