@@ -10,6 +10,12 @@ export default defineConfig({
         }),
         vue(),
     ],
+    resolve: {
+        alias: {
+            'ziggy': '/vendor/tightenco/ziggy/src/js',
+            'ziggy-vue': '/vendor/tightenco/ziggy/src/js/vue'
+            },
+    },
     server: {
         host: true,
     },
