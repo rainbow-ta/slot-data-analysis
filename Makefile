@@ -86,3 +86,5 @@ pint:
 	docker compose exec app ./vendor/bin/pint -v
 pint-test:
 	docker compose exec app ./vendor/bin/pint -v --test
+scrape:
+	docker compose exec app php artisan command:scrape-anaslot
