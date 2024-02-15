@@ -19,6 +19,6 @@ class HallData extends Model
 
     public function slotMachine()
     {
-        return $this->belongsTo(SlotMachine::class);
+        return $this->belongsTo(SlotMachine::class, 'slot_machines_id');
     }
 }
