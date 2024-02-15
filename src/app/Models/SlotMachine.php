@@ -17,6 +17,6 @@ class SlotMachine extends Model
 
     public function hallData()
     {
-        return $this->hasMany(HallData::class);
+        return $this->hasMany(HallData::class, 'slot_machines_id');
     }
 }
