@@ -1,5 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
+import BaseLayout from '@/Components/BaseLayout.vue';
+
 defineProps({
   halls: {
     type: Object,
@@ -9,7 +11,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="mx-8 my-8">
+  <base-layout>
     <div class="my-8">
       <h1 class="text-4xl font-bold">ホール一覧</h1>
     </div>
@@ -51,5 +53,5 @@ defineProps({
         </div>
       </div>
     </div>
-  </div>
+  </base-layout>
 </template>
