@@ -16,4 +16,19 @@ class HallDataController extends Controller
         ]);
     }
 
+    public function show($hallId)
+    {
+        $hallDataService = new HallDataService();
+        $hallData = $hallDataService->fetchHallData($hallId);
+
+        $matstubiArray = $hallDataService->matsubiCount($hallData);
+        $matsubiTotals = $hallDataService->matsubiTotals($matstubiArray);
+
+        return Inertia::render('HallData/Show', [
+            'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
+            'matsubiArray' => $matstubiArray,
+            'matsubiTotals' => $matsubiTotals,
+            // 'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
+        ]);
+    }
 }
