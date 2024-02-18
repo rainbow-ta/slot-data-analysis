@@ -65,7 +65,7 @@ function highlightColorForDate(date, value) {
           <td class="border px-4 py-2 text-gray-700">{{ matsubiNumber }}</td>
           <td
             class="border px-4 py-2 text-gray-700"
-            :class="{ 'bg-amber-400': highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) }"
+            :class="{ 'bg-red-200': highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) }"
             :style="{ color: highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) ? 'red' : 'inherit' }"
           >
             {{ matsubiTotals[matsubiNumber]['total'] }}
@@ -75,7 +75,7 @@ function highlightColorForDate(date, value) {
             v-for="(item, date) in matsubiArray"
             :key="date"
             class="border px-4 py-2"
-            :class="{ 'bg-amber-400': highlightColorForDate(date, item[matsubiNumber]) }"
+            :class="{ 'bg-red-200': highlightColorForDate(date, item[matsubiNumber]) }"
             :style="{ color: highlightColorForDate(date, item[matsubiNumber]) ? 'red' : 'inherit' }"
           >
             {{ item[matsubiNumber] }}
