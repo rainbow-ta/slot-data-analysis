@@ -55,4 +55,18 @@ class HallDataService
         return $matsubiTotals;
     }
 
+    public function highSettingNumbersCount($hallData)
+    {
+        return $hallData->where('is_high_setting', 1)->groupBy('slot_number')->map(function ($group) {
+            $slotNumber = $group->first()['slot_number'];
+            $count = $group->count();
+            $slotMachineName = $group->first()->slotMachine->name;
+            
+            return [
+                'slot_number' => $slotNumber,
+                'count' => $count,
+                'slot_machine_name' => $slotMachineName,
+            ];
+        })->sortBy('slot_number')->sortByDesc('count')->values()->all();
+    }
 }

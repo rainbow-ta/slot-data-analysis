@@ -28,7 +28,7 @@ class HallDataController extends Controller
             'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
             'matsubiArray' => $matstubiArray,
             'matsubiTotals' => $matsubiTotals,
-            // 'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
+            'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
         ]);
     }
 }

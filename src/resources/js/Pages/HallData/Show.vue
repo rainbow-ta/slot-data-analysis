@@ -15,6 +15,9 @@ const props = defineProps({
     required: true,
   },
   highSettingNumbers: {
+    type: Object,
+    required: true,
+  },
 });
 
 const matsubiNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -30,6 +33,18 @@ function highlightColorForDate(date, value) {
 }
 </script>
 
+<style scoped>
+.table-container {
+  overflow-x: auto;
+  max-height: 80vh;
+}
+
+th.sticky {
+  position: sticky;
+  z-index: 999;
+}
+</style>
+
 <template>
   <base-layout>
     <div class="my-8">
@@ -44,7 +59,7 @@ function highlightColorForDate(date, value) {
       v-if="Object.keys(matsubiArray).length > 0"
       class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
     >
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-200">
         <tr>
           <th class="px-4 py-2">末尾</th>
           <th class="px-4 py-2">合計</th>
@@ -86,6 +101,32 @@ function highlightColorForDate(date, value) {
     <table v-else>
       データがありません。
     </table>
+
+    <div class="my-8">
+      <h2 class="text-3xl font-bold">台番号ごとのデータ</h2>
+    </div>
+
+    <div class="table-container">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase">
+          <tr>
+            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
+            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">投入回数</th>
+            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="highSettingNumber in highSettingNumbers"
+            :key="highSettingNumber.slot_number"
+          >
+            <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_number }}</td>
+            <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.count }}</td>
+            <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_machine_name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
   </base-layout>
 </template>
