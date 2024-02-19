@@ -29,6 +29,8 @@ class HallDataController extends Controller
             'matsubiArray' => $matstubiArray,
             'matsubiTotals' => $matsubiTotals,
             'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
+            'allDate' => $hallData->unique('date')->pluck('date'),
+            'allDateData' => $hallDataService->getAllDateData($hallData),
         ]);
     }
 }

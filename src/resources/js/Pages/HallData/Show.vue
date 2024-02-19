@@ -18,6 +18,14 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  allDate: {
+    type: Object,
+    required: true,
+  },
+  allDateData: {
+    type: Object,
+    required: true,
+  },
 });
 
 const matsubiNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -31,6 +39,14 @@ function highlightColorForDate(date, value) {
   const maxInDate = Math.max(...Object.values(props.matsubiArray[date]));
   return value === maxInDate ? true : false;
 }
+
+const highlightColorForDifferenceCoins = (coins) => {
+  return coins > 0 ? true : false;
+}
+
+const formatDifferenceCoins = (coins) => {
+  return coins > 0 ? `+${coins}` : coins;
+};
 </script>
 
 <style scoped>
@@ -41,7 +57,6 @@ function highlightColorForDate(date, value) {
 
 th.sticky {
   position: sticky;
-  z-index: 999;
 }
 </style>
 
@@ -128,5 +143,42 @@ th.sticky {
       </table>
     </div>
 
+    <div class="my-8">
+      <h2 class="text-3xl font-bold">日付ごとのデータ</h2>
+    </div>
+
+    <div class="table-container">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase">
+          <tr>
+            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
+            <th
+              v-for="date in allDate"
+              :key="date"
+              class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+            >
+              {{ date }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(dateData, slotNumber) in allDateData" :key="slotNumber">
+            <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ slotNumber }}</th>
+            <td
+              v-for="(item, date) in dateData"
+              :key="date"
+              :class="{ 'bg-red-200': item.is_high_setting }"
+              class="border px-4 py-2 text-gray-700"
+            >
+              <div class="truncate">{{ item.name }}</div>
+              <div>{{ item.game_count }}G</div>
+              <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(item.difference_coins) }">
+                {{ formatDifferenceCoins(item.difference_coins) }}枚
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </base-layout>
 </template>
