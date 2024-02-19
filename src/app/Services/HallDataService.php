@@ -69,4 +69,20 @@ class HallDataService
             ];
         })->sortBy('slot_number')->sortByDesc('count')->values()->all();
     }
+
+    public function getAllDateData($hallData)
+    {
+        $allDateData = [];
+
+        foreach ($hallData as $data) {
+            $slotNumber = $data['slot_number'];
+
+            $allDateData[$slotNumber][$data['date']]['name'] = $data['slotMachine']['name'];
+            $allDateData[$slotNumber][$data['date']]['game_count'] = $data['game_count'];
+            $allDateData[$slotNumber][$data['date']]['difference_coins'] = $data['difference_coins'];
+            $allDateData[$slotNumber][$data['date']]['is_high_setting'] = $data['is_high_setting'];
+        }
+
+        return $allDateData;
+    }
 }
