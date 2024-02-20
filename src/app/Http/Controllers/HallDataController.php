@@ -30,6 +30,7 @@ class HallDataController extends Controller
             'matsubiTotals' => $matsubiTotals,
             'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
             'allDate' => $hallData->unique('date')->pluck('date'),
+            'machineWinRates' => $hallDataService->getMachineWinRates($hallData),
             'allDateData' => $hallDataService->getAllDateData($hallData),
         ]);
     }

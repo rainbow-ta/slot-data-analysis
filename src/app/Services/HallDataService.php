@@ -5,6 +5,9 @@ use App\Models\HallData;
 
 class HallDataService
 {
+    // TODO:Enumなどで管理する
+    CONST COINS_PER_SPIN = 3;
+
     public function fetchHallData($hallId) {
         return HallData::whereHallId($hallId)
             ->with('slotMachine')
@@ -68,6 +71,47 @@ class HallDataService
                 'slot_machine_name' => $slotMachineName,
             ];
         })->sortBy('slot_number')->sortByDesc('count')->values()->all();
+    }
+
+    public function getMachineWinRates($hallData)
+    {
+        $machineWinRates = [];
+
+        foreach ($hallData as $data) {
+            $date = $data['date'];
+            $machineName = $data['slotMachine']['name'];
+
+            if (!isset($machineWinRates[$machineName][$date])) {
+                $machineWinRates[$machineName][$date]['count'] = 0;
+                $machineWinRates[$machineName][$date]['win_count'] = 0;
+                $machineWinRates[$machineName][$date]['game_count'] = 0;
+                $machineWinRates[$machineName][$date]['difference_coins'] = 0;
+            } else {
+                $machineWinRates[$machineName][$date]['count']++;
+                $machineWinRates[$machineName][$date]['game_count'] += $data['game_count'];
+                $machineWinRates[$machineName][$date]['difference_coins'] += $data['difference_coins'];
+                
+                if ($data['difference_coins'] > 0) {
+                    $machineWinRates[$machineName][$date]['win_count']++;
+                }
+            }
+        }
+
+        foreach ($machineWinRates as $machineName => $values) {
+            foreach ($values as $key => $value) {
+                if ($value['game_count'] > 0) {
+                    $machineWinRates[$machineName][$key]['average_game_count'] = floor($value['game_count'] / $value['count']);
+                    $machineWinRates[$machineName][$key]['average_difference_coins'] = floor($value['difference_coins'] / $value['count']);
+                    $machineWinRates[$machineName][$key]['average_kikaiwari'] = number_format((($value['game_count'] * self::COINS_PER_SPIN + $value['difference_coins']) / ($value['game_count'] * self::COINS_PER_SPIN) * 100), 2);
+                } else {
+                    $machineWinRates[$machineName][$key]['average_game_count'] = 0;
+                    $machineWinRates[$machineName][$key]['average_difference_coins'] = 0;
+                    $machineWinRates[$machineName][$key]['average_kikaiwari'] = 0;
+                }
+            }
+        }
+
+        return $machineWinRates;
     }
 
     public function getAllDateData($hallData)
