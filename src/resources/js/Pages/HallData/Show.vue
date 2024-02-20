@@ -22,6 +22,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  machineWinRates: {
+    type: Object,
+    required: true,
+  },
   allDateData: {
     type: Object,
     required: true,
@@ -138,6 +142,52 @@ th.sticky {
             <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_number }}</td>
             <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.count }}</td>
             <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_machine_name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="my-8">
+      <h2 class="text-3xl font-bold">機種ごとのデータ</h2>
+    </div>
+
+    <div class="table-container">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase">
+          <tr>
+            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
+            <th
+              v-for="date in allDate"
+              :key="date"
+              class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+            >
+              {{ date }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="(dateArray, machineName) in machineWinRates"
+            :key="machineName"
+          >
+            <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ machineName }}</th>
+            <td
+              v-for="date in allDate"
+              :key="date"
+              class="border px-4 py-2 text-gray-700"
+              :class="{
+                'bg-yellow-50': dateArray[date] && dateArray[date]['average_difference_coins'] >= 1 && dateArray[date]['average_difference_coins'] <= 1000,
+                'bg-green-100': dateArray[date] && dateArray[date]['average_difference_coins'] > 1000 && dateArray[date]['average_difference_coins'] <= 2000,
+                'bg-red-200': dateArray[date] && dateArray[date]['average_difference_coins'] > 2000
+              }"
+            >
+              <template v-if="dateArray[date]">
+                <div>{{ dateArray[date]['win_count'] }}/{{ dateArray[date]['count'] }}台</div>
+                <div>{{ dateArray[date]['average_kikaiwari'] }}%</div>
+                <div>{{ dateArray[date]['average_game_count'] }}G</div>
+                <div>{{ dateArray[date]['average_difference_coins'] }}枚</div>
+              </template>
+            </td>
           </tr>
         </tbody>
       </table>
