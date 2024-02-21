@@ -45,13 +45,13 @@ defineProps({
                       </Link>
                     </div>
                   </td>
-                  <td class="whitespace-nowrap px-6 py-4 font-medium">
+                  <td class="whitespace-nowrap px-6 py-4 font-medium cursor-pointer">
                     <a :href="hall.p_world_url" target="_blank">{{ hall.p_world_url }}</a>
                   </td>
-                  <td class="whitespace-nowrap px-6 py-4 font-medium">
+                  <td class="whitespace-nowrap px-6 py-4 font-medium cursor-pointer">
                     <a :href="hall.dmm_url" target="_blank">{{ hall.dmm_url }}</a>
                   </td>
-                  <td class="whitespace-nowrap px-6 py-4 font-medium">
+                  <td class="whitespace-nowrap px-6 py-4 font-medium cursor-pointer">
                     <a :href="hall.event_url" target="_blank">{{ hall.event_url }}</a>
                   </td>
                 </tr>
