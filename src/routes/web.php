@@ -14,4 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [App\Http\Controllers\HallDataController::class, 'index']);
-Route::resource('hall-data', App\Http\Controllers\HallDataController::class);
+Route::get('hall-data/{id}/summary', [App\Http\Controllers\HallDataController::class, 'summary']);
+Route::get('hall-data/{id}/detail', [App\Http\Controllers\HallDataController::class, 'detail']);

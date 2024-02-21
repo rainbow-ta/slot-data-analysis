@@ -35,7 +35,15 @@ defineProps({
                   class="border-b dark:border-neutral-500"
                 >
                   <td class="whitespace-nowrap px-6 py-4 font-medium">
-                    <Link :href="'/hall-data/' + hall.id">{{ hall.name }}</Link>
+                    {{ hall.name }}
+                    <div class="py-2">
+                      <Link :href="'/hall-data/' + hall.id + '/summary'">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">概要</span>
+                      </Link>
+                      <Link :href="'/hall-data/' + hall.id + '/detail'">
+                        <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">詳細</span>
+                      </Link>
+                    </div>
                   </td>
                   <td class="whitespace-nowrap px-6 py-4 font-medium">
                     <a :href="hall.p_world_url" target="_blank">{{ hall.p_world_url }}</a>
