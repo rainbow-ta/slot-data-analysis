@@ -8,10 +8,13 @@ class HallDataService
     // TODO:Enumなどで管理する
     CONST COINS_PER_SPIN = 3;
 
-    public function fetchHallData($hallId) {
+    public function fetchHallData($hallId, $period = null) {
         return HallData::whereHallId($hallId)
             ->with('slotMachine')
             ->orderBy('date', 'desc')
+            ->when($period, function($q, $period) {
+                return $q->where('date', '>=', now()->subDays($period));
+            })
             ->get();
     }
 
@@ -128,5 +131,23 @@ class HallDataService
         }
 
         return $allDateData;
+    }
+
+    public function getDifferenceCoinsBySlotMachines($hallData) {
+        $differenceCoinsBySlotMachines = [];
+
+        foreach ($hallData as $data) {
+            $machineName = $data['slotMachine']['name'];
+
+            if (!isset($differenceCoinsBySlotMachines[$machineName])) {
+                $differenceCoinsBySlotMachines[$machineName] = 0;
+            }
+
+            $differenceCoinsBySlotMachines[$machineName] += $data['difference_coins'];
+        }
+
+        arsort($differenceCoinsBySlotMachines);
+
+        return $differenceCoinsBySlotMachines;
     }
 }

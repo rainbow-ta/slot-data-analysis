@@ -67,7 +67,7 @@ th.sticky {
 <template>
   <base-layout>
     <div class="my-8">
-      <h1 class="text-4xl font-bold">{{ hallName }}</h1>
+      <h1 class="text-4xl font-bold">{{ hallName }}&nbsp;データ詳細</h1>
     </div>
 
     <div class="my-8">
