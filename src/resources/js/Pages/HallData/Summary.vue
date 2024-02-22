@@ -53,7 +53,16 @@ th.sticky {
             :key="machineName"
           >
             <td class="border px-4 py-2 text-gray-700">{{ machineName }}</td>
-            <td class="border px-4 py-2 text-gray-700">{{ coins }}</td>
+            <td
+              class="border px-4 py-2 text-gray-700"
+              :class="{
+                'bg-yellow-50': coins >= 1 && coins <= 10000,
+                'bg-green-100': coins >= 10001 && coins <= 50000,
+                'bg-red-200': coins >= 50001,
+              }"
+            >
+              {{ coins }}
+            </td>
           </tr>
         </tbody>
       </table>
