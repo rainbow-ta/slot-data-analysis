@@ -18,6 +18,7 @@ const props = defineProps({
 .table-container {
   overflow-x: auto;
   max-height: 80vh;
+  display: inline-block;
 }
 
 th.sticky {
@@ -38,7 +39,7 @@ th.sticky {
     <div class="table-container">
       <table
         v-if="Object.keys(differenceCoinsBySlotMachines).length > 0"
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
       >
         <thead class="text-xs text-gray-700 uppercase bg-gray-200">
           <tr>
