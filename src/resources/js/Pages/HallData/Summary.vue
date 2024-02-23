@@ -18,7 +18,6 @@ const props = defineProps({
 .table-container {
   overflow-x: auto;
   max-height: 80vh;
-  display: inline-block;
 }
 
 th.sticky {
@@ -37,7 +36,7 @@ th.sticky {
         <h2 class="text-3xl font-bold">機種ごとの差枚</h2>
       </div>
 
-      <div class="table-container">
+      <div class="table-container inline-block">
         <table
           v-if="Object.keys(differenceCoinsBySlotMachines).length > 0"
           class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"

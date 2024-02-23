@@ -32,6 +32,7 @@ const props = defineProps({
   },
 });
 
+// TODO:他の画面でも使う処理を共通化する
 const matsubiNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 function highlightColorForTotal(value) {
@@ -51,6 +52,11 @@ const highlightColorForDifferenceCoins = (coins) => {
 const formatDifferenceCoins = (coins) => {
   return coins > 0 ? `+${coins}` : coins;
 };
+
+const maxLength = 17;
+const truncateText = (text) => {
+  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+}
 </script>
 
 <style scoped>
@@ -77,7 +83,7 @@ th.sticky {
 
       <table
         v-if="Object.keys(matsubiArray).length > 0"
-        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
       >
         <thead class="text-xs text-gray-700 uppercase bg-gray-200">
           <tr>
@@ -126,8 +132,8 @@ th.sticky {
         <h2 class="text-3xl font-bold">台番号ごとのデータ</h2>
       </div>
 
-      <div class="table-container">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <div class="table-container inline-block">
+        <table class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase">
             <tr>
               <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
@@ -199,7 +205,7 @@ th.sticky {
       </div>
 
       <div class="table-container">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase">
             <tr>
               <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
@@ -221,7 +227,7 @@ th.sticky {
                 :class="{ 'bg-red-200': item.is_high_setting }"
                 class="border px-4 py-2 text-gray-700"
               >
-                <div class="truncate">{{ item.name }}</div>
+                <div class="truncate">{{ truncateText(item.name) }}</div>
                 <div>{{ item.game_count }}G</div>
                 <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(item.difference_coins) }">
                   {{ formatDifferenceCoins(item.difference_coins) }}枚
