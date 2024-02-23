@@ -61,7 +61,7 @@ th.sticky {
                   'bg-red-200': coins >= 50001,
                 }"
               >
-                {{ coins }}
+                {{ coins.toLocaleString('ja-JP') }}枚
               </td>
             </tr>
           </tbody>
