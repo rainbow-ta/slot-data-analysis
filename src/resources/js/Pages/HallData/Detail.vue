@@ -65,170 +65,172 @@ th.sticky {
 </style>
 
 <template>
-  <base-layout>
-    <div class="my-8">
-      <h1 class="text-4xl font-bold">{{ hallName }}&nbsp;データ詳細</h1>
-    </div>
+  <BaseLayout>
+    <template #main>
+      <div class="my-8">
+        <h1 class="text-4xl font-bold">{{ hallName }}&nbsp;データ詳細</h1>
+      </div>
 
-    <div class="my-8">
-      <h2 class="text-3xl font-bold">末尾ごとのデータ</h2>
-    </div>
+      <div class="my-8">
+        <h2 class="text-3xl font-bold">末尾ごとのデータ</h2>
+      </div>
 
-    <table
-      v-if="Object.keys(matsubiArray).length > 0"
-      class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-    >
-      <thead class="text-xs text-gray-700 uppercase bg-gray-200">
-        <tr>
-          <th class="px-4 py-2">末尾</th>
-          <th class="px-4 py-2">合計</th>
-          <th
-            v-for="(item, key) in matsubiArray"
-            :key="key"
-            class="px-4 py-2"
-          >
-            {{ key }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="matsubiNumber in matsubiNumbers"
-          :key="matsubiNumber"
-        >
-          <td class="border px-4 py-2 text-gray-700">{{ matsubiNumber }}</td>
-          <td
-            class="border px-4 py-2 text-gray-700"
-            :class="{ 'bg-red-200': highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) }"
-            :style="{ color: highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) ? 'red' : 'inherit' }"
-          >
-            {{ matsubiTotals[matsubiNumber]['total'] }}
-            （{{ matsubiTotals[matsubiNumber]['percentage'] }}）
-          </td>
-          <td
-            v-for="(item, date) in matsubiArray"
-            :key="date"
-            class="border px-4 py-2"
-            :class="{ 'bg-red-200': highlightColorForDate(date, item[matsubiNumber]) }"
-            :style="{ color: highlightColorForDate(date, item[matsubiNumber]) ? 'red' : 'inherit' }"
-          >
-            {{ item[matsubiNumber] }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <table v-else>
-      データがありません。
-    </table>
-
-    <div class="my-8">
-      <h2 class="text-3xl font-bold">台番号ごとのデータ</h2>
-    </div>
-
-    <div class="table-container">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase">
+      <table
+        v-if="Object.keys(matsubiArray).length > 0"
+        class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      >
+        <thead class="text-xs text-gray-700 uppercase bg-gray-200">
           <tr>
-            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
-            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">投入回数</th>
-            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="highSettingNumber in highSettingNumbers"
-            :key="highSettingNumber.slot_number"
-          >
-            <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_number }}</td>
-            <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.count }}</td>
-            <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_machine_name }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="my-8">
-      <h2 class="text-3xl font-bold">機種ごとのデータ</h2>
-    </div>
-
-    <div class="table-container">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase">
-          <tr>
-            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
+            <th class="px-4 py-2">末尾</th>
+            <th class="px-4 py-2">合計</th>
             <th
-              v-for="date in allDate"
-              :key="date"
-              class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+              v-for="(item, key) in matsubiArray"
+              :key="key"
+              class="px-4 py-2"
             >
-              {{ date }}
+              {{ key }}
             </th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="(dateArray, machineName) in machineWinRates"
-            :key="machineName"
+            v-for="matsubiNumber in matsubiNumbers"
+            :key="matsubiNumber"
           >
-            <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ machineName }}</th>
+            <td class="border px-4 py-2 text-gray-700">{{ matsubiNumber }}</td>
             <td
-              v-for="date in allDate"
-              :key="date"
               class="border px-4 py-2 text-gray-700"
-              :class="{
-                'bg-yellow-50': dateArray[date] && dateArray[date]['average_difference_coins'] >= 1 && dateArray[date]['average_difference_coins'] <= 1000,
-                'bg-green-100': dateArray[date] && dateArray[date]['average_difference_coins'] > 1000 && dateArray[date]['average_difference_coins'] <= 2000,
-                'bg-red-200': dateArray[date] && dateArray[date]['average_difference_coins'] > 2000
-              }"
+              :class="{ 'bg-red-200': highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) }"
+              :style="{ color: highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) ? 'red' : 'inherit' }"
             >
-              <template v-if="dateArray[date]">
-                <div>{{ dateArray[date]['win_count'] }}/{{ dateArray[date]['count'] }}台</div>
-                <div>{{ dateArray[date]['average_kikaiwari'] }}%</div>
-                <div>{{ dateArray[date]['average_game_count'] }}G</div>
-                <div>{{ dateArray[date]['average_difference_coins'] }}枚</div>
-              </template>
+              {{ matsubiTotals[matsubiNumber]['total'] }}
+              （{{ matsubiTotals[matsubiNumber]['percentage'] }}）
+            </td>
+            <td
+              v-for="(item, date) in matsubiArray"
+              :key="date"
+              class="border px-4 py-2"
+              :class="{ 'bg-red-200': highlightColorForDate(date, item[matsubiNumber]) }"
+              :style="{ color: highlightColorForDate(date, item[matsubiNumber]) ? 'red' : 'inherit' }"
+            >
+              {{ item[matsubiNumber] }}
             </td>
           </tr>
         </tbody>
       </table>
-    </div>
-
-    <div class="my-8">
-      <h2 class="text-3xl font-bold">日付ごとのデータ</h2>
-    </div>
-
-    <div class="table-container">
-      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase">
-          <tr>
-            <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
-            <th
-              v-for="date in allDate"
-              :key="date"
-              class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
-            >
-              {{ date }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(dateData, slotNumber) in allDateData" :key="slotNumber">
-            <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ slotNumber }}</th>
-            <td
-              v-for="(item, date) in dateData"
-              :key="date"
-              :class="{ 'bg-red-200': item.is_high_setting }"
-              class="border px-4 py-2 text-gray-700"
-            >
-              <div class="truncate">{{ item.name }}</div>
-              <div>{{ item.game_count }}G</div>
-              <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(item.difference_coins) }">
-                {{ formatDifferenceCoins(item.difference_coins) }}枚
-              </div>
-            </td>
-          </tr>
-        </tbody>
+      <table v-else>
+        データがありません。
       </table>
-    </div>
-  </base-layout>
+
+      <div class="my-8">
+        <h2 class="text-3xl font-bold">台番号ごとのデータ</h2>
+      </div>
+
+      <div class="table-container">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase">
+            <tr>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">投入回数</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="highSettingNumber in highSettingNumbers"
+              :key="highSettingNumber.slot_number"
+            >
+              <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_number }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.count }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_machine_name }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="my-8">
+        <h2 class="text-3xl font-bold">機種ごとのデータ</h2>
+      </div>
+
+      <div class="table-container">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase">
+            <tr>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
+              <th
+                v-for="date in allDate"
+                :key="date"
+                class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+              >
+                {{ date }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(dateArray, machineName) in machineWinRates"
+              :key="machineName"
+            >
+              <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ machineName }}</th>
+              <td
+                v-for="date in allDate"
+                :key="date"
+                class="border px-4 py-2 text-gray-700"
+                :class="{
+                  'bg-yellow-50': dateArray[date] && dateArray[date]['average_difference_coins'] >= 1 && dateArray[date]['average_difference_coins'] <= 1000,
+                  'bg-green-100': dateArray[date] && dateArray[date]['average_difference_coins'] > 1000 && dateArray[date]['average_difference_coins'] <= 2000,
+                  'bg-red-200': dateArray[date] && dateArray[date]['average_difference_coins'] > 2000
+                }"
+              >
+                <template v-if="dateArray[date]">
+                  <div>{{ dateArray[date]['win_count'] }}/{{ dateArray[date]['count'] }}台</div>
+                  <div>{{ dateArray[date]['average_kikaiwari'] }}%</div>
+                  <div>{{ dateArray[date]['average_game_count'] }}G</div>
+                  <div>{{ dateArray[date]['average_difference_coins'] }}枚</div>
+                </template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="my-8">
+        <h2 class="text-3xl font-bold">日付ごとのデータ</h2>
+      </div>
+
+      <div class="table-container">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase">
+            <tr>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
+              <th
+                v-for="date in allDate"
+                :key="date"
+                class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+              >
+                {{ date }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(dateData, slotNumber) in allDateData" :key="slotNumber">
+              <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ slotNumber }}</th>
+              <td
+                v-for="(item, date) in dateData"
+                :key="date"
+                :class="{ 'bg-red-200': item.is_high_setting }"
+                class="border px-4 py-2 text-gray-700"
+              >
+                <div class="truncate">{{ item.name }}</div>
+                <div>{{ item.game_count }}G</div>
+                <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(item.difference_coins) }">
+                  {{ formatDifferenceCoins(item.difference_coins) }}枚
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+  </BaseLayout>
 </template>
