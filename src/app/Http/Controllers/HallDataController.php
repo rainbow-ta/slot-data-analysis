@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Hall;
 use App\Services\HallDataService;
+use App\Services\SummaryHallDataService;
 
 class HallDataController extends Controller
 {
@@ -19,12 +20,18 @@ class HallDataController extends Controller
     public function summary($hallId)
     {
         $hallDataService = new HallDataService();
-        $hallData = $hallDataService->fetchHallData($hallId);
-        $differenceCoinsBySlotMachines = $hallDataService->getDifferenceCoinsBySlotMachines($hallData);
+        $hallData = $hallDataService->fetchHallData($hallId, 30);  // TODO:期間を指定出来るようにする
+
+        $summaryHallDataService = new SummaryHallDataService();
+        $differenceCoinsBySlotMachines = $summaryHallDataService->getDifferenceCoinsBySlotMachines($hallData);
+
+        $sumDifferenceCoins = $summaryHallDataService->getSumDifferenceCoins($hallData);
+        $sortSumDifferenceCoins = $sumDifferenceCoins->sortByDesc('sum_difference_coins')->values();
 
         return Inertia::render('HallData/Summary', [
             'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
             'differenceCoinsBySlotMachines' => $differenceCoinsBySlotMachines,
+            'sortSumDifferenceCoins' => $sortSumDifferenceCoins,
         ]);
     }
 
