@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('halls', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('ana_slot_url_name');
+            $table->string('ana_slot_url_name')->nullable();
             $table->string('p_world_url')->nullable();
             $table->string('dmm_url')->nullable();
             $table->string('event_url')->nullable();
