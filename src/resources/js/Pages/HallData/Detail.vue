@@ -228,9 +228,9 @@ th.sticky {
                 class="border px-4 py-2 text-gray-700"
               >
                 <div class="truncate">{{ truncateText(item.name) }}</div>
-                <div>{{ item.game_count.toLocaleString('ja-JP') }}G</div>
+                <div>{{ item.game_count?.toLocaleString('ja-JP') }}G</div>
                 <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(item.difference_coins) }">
-                  {{ formatDifferenceCoins(item.difference_coins.toLocaleString('ja-JP')) }}枚
+                  {{ formatDifferenceCoins(item.difference_coins?.toLocaleString('ja-JP')) }}枚
                 </div>
               </td>
             </tr>
