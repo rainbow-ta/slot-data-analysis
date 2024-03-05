@@ -106,11 +106,11 @@ th.sticky {
             <td class="border px-4 py-2 text-gray-700">{{ matsubiNumber }}</td>
             <td
               class="border px-4 py-2 text-gray-700"
-              :class="{ 'bg-red-200': highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) }"
-              :style="{ color: highlightColorForTotal(matsubiTotals[matsubiNumber]['total']) ? 'red' : 'inherit' }"
+              :class="{ 'bg-red-200': highlightColorForTotal(matsubiTotals[matsubiNumber]?.['total']) }"
+              :style="{ color: highlightColorForTotal(matsubiTotals[matsubiNumber]?.['total']) ? 'red' : 'inherit' }"
             >
-              {{ matsubiTotals[matsubiNumber]['total'] }}
-              （{{ matsubiTotals[matsubiNumber]['percentage'] }}）
+              {{ matsubiTotals[matsubiNumber]?.['total'] }}
+              （{{ matsubiTotals[matsubiNumber]?.['percentage'] }}）
             </td>
             <td
               v-for="(item, date) in matsubiArray"
