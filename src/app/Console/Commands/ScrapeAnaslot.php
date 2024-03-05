@@ -7,6 +7,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use App\Models\Hall;
 use App\Models\HallData;
 use App\Models\SlotMachine;
+use App\Services\HighSettingService;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -26,6 +27,14 @@ class ScrapeAnaslot extends Command
      * @var string
      */
     protected $description = 'Scrapes Ana Slot data for the past 3 months';
+
+    private $highSettingService;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->highSettingService = new HighSettingService();
+    }
 
     /**
      * Execute the console command.
@@ -119,30 +128,34 @@ class ScrapeAnaslot extends Command
 
             $slotMachine = SlotMachine::firstOrCreate(['name' => $rowData[0]]);
 
-
-            $countRowData = count($rowData);
+            // 高設定かを判定
+            $gameCount = $rowData[2] ?? null;
+            $differenceCoins = $rowData[3] ?? null;
+            $isHighSetting = $this->highSettingService->isHighSetting($gameCount, $differenceCoins);
 
             // 店舗によってデータ構造が異なるため、要素数で判定して取得する
+            $countRowData = count($rowData);
             if ($countRowData === 9) {
                 $dataArray[] = [
                     'slot_machines_id' => $slotMachine->id,
                     'slot_number' => $rowData[1] ?? null,
-                    'game_count' => $rowData[2] ?? null,
-                    'difference_coins' => $rowData[3] ?? null,
+                    'game_count' => $gameCount,
+                    'difference_coins' => $differenceCoins,
                     'big_bonus_count' => $rowData[4] ?? null,
                     'regular_bonus_count' => $rowData[5] ?? null,
                     'synthesis_probability' => $rowData[6] ?? null,
                     'big_bonus_probability' => $rowData[7] ?? null,
                     'regular_bonus_probability' => $rowData[8] ?? null,
                     'date' => $formattedDate,
+                    'is_high_setting' => $isHighSetting,
                     'hall_id' => $hall->id,
                 ];
             } else {
                 $dataArray[] = [
                     'slot_machines_id' => $slotMachine->id,
                     'slot_number' => $rowData[1] ?? null,
-                    'game_count' => $rowData[2] ?? null,
-                    'difference_coins' => $rowData[3] ?? null,
+                    'game_count' => $gameCount,
+                    'difference_coins' => $differenceCoins,
                     'big_bonus_count' => $rowData[4] ?? null,
                     'regular_bonus_count' => $rowData[5] ?? null,
                     'art_count' => $rowData[6] ?? null,
@@ -151,6 +164,7 @@ class ScrapeAnaslot extends Command
                     'regular_bonus_probability' => $rowData[9] ?? null,
                     'art_probability' => $rowData[10] ?? null,
                     'date' => $formattedDate,
+                    'is_high_setting' => $isHighSetting,
                     'hall_id' => $hall->id,
                 ];
             }
