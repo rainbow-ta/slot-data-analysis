@@ -32,7 +32,7 @@ th.sticky {
   <base-layout>
     <template #main>
       <div class="my-8">
-        <h1 class="text-4xl font-bold">{{ hallName }}&nbsp;データ概要</h1>
+        <h1 class="text-4xl font-bold">{{ hallName }}&nbsp;イベント日</h1>
       </div>
 
       <div class="my-8">

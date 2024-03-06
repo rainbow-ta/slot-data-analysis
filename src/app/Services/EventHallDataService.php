@@ -5,7 +5,7 @@ use App\Models\HallData;
 use App\Models\SlotMachine;
 use Illuminate\Support\Facades\DB;
 
-class SummaryHallDataService
+class EventHallDataService
 {
     public function getDifferenceCoinsBySlotMachines($hallData) {
         $differenceCoinsBySlotMachines = [];
