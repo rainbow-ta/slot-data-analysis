@@ -81,52 +81,54 @@ th.sticky {
         <h2 class="text-3xl font-bold">末尾ごとのデータ</h2>
       </div>
 
-      <table
-        v-if="Object.keys(matsubiArray).length > 0"
-        class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-      >
-        <thead class="text-xs text-gray-700 uppercase bg-gray-200">
-          <tr>
-            <th class="px-4 py-2">末尾</th>
-            <th class="px-4 py-2">合計</th>
-            <th
-              v-for="(item, key) in matsubiArray"
-              :key="key"
-              class="px-4 py-2"
+      <div class="table-container">
+        <table
+          v-if="Object.keys(matsubiArray).length > 0"
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+            <tr>
+              <th class="px-4 py-2">末尾</th>
+              <th class="px-4 py-2">合計</th>
+              <th
+                v-for="(item, key) in matsubiArray"
+                :key="key"
+                class="px-4 py-2"
+              >
+                {{ key }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="matsubiNumber in matsubiNumbers"
+              :key="matsubiNumber"
             >
-              {{ key }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="matsubiNumber in matsubiNumbers"
-            :key="matsubiNumber"
-          >
-            <td class="border px-4 py-2 text-gray-700">{{ matsubiNumber }}</td>
-            <td
-              class="border px-4 py-2 text-gray-700"
-              :class="{ 'bg-red-200': highlightColorForTotal(matsubiTotals[matsubiNumber]?.['total']) }"
-              :style="{ color: highlightColorForTotal(matsubiTotals[matsubiNumber]?.['total']) ? 'red' : 'inherit' }"
-            >
-              {{ matsubiTotals[matsubiNumber]?.['total'] }}
-              （{{ matsubiTotals[matsubiNumber]?.['percentage'] }}）
-            </td>
-            <td
-              v-for="(item, date) in matsubiArray"
-              :key="date"
-              class="border px-4 py-2"
-              :class="{ 'bg-red-200': highlightColorForDate(date, item[matsubiNumber]) }"
-              :style="{ color: highlightColorForDate(date, item[matsubiNumber]) ? 'red' : 'inherit' }"
-            >
-              {{ item[matsubiNumber] }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table v-else>
-        データがありません。
-      </table>
+              <td class="border px-4 py-2 text-gray-700">{{ matsubiNumber }}</td>
+              <td
+                class="border px-4 py-2 text-gray-700"
+                :class="{ 'bg-red-200': highlightColorForTotal(matsubiTotals[matsubiNumber]?.['total']) }"
+                :style="{ color: highlightColorForTotal(matsubiTotals[matsubiNumber]?.['total']) ? 'red' : 'inherit' }"
+              >
+                {{ matsubiTotals[matsubiNumber]?.['total'] }}
+                （{{ matsubiTotals[matsubiNumber]?.['percentage'] }}）
+              </td>
+              <td
+                v-for="(item, date) in matsubiArray"
+                :key="date"
+                class="border px-4 py-2"
+                :class="{ 'bg-red-200': highlightColorForDate(date, item[matsubiNumber]) }"
+                :style="{ color: highlightColorForDate(date, item[matsubiNumber]) ? 'red' : 'inherit' }"
+              >
+                {{ item[matsubiNumber] }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table v-else>
+          データがありません。
+        </table>
+      </div>
 
       <div class="my-8">
         <h2 class="text-3xl font-bold">台番号ごとのデータ</h2>
