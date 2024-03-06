@@ -19,6 +19,7 @@ class HallDataController extends Controller
 
     public function event($hallId)
     {
+        $hallDataService = new HallDataService();
         $eventHallDataService = new EventHallDataService();
         $hallData = $eventHallDataService->getDataWithEventDate($hallId);
 
@@ -31,6 +32,9 @@ class HallDataController extends Controller
             'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
             'differenceCoinsBySlotMachines' => $differenceCoinsBySlotMachines,
             'sortSumDifferenceCoins' => $sortSumDifferenceCoins,
+            'allDate' => $hallData->unique('date')->pluck('date'),
+            'machineWinRates' => $hallDataService->getMachineWinRates($hallData),
+            'allDateData' => $hallDataService->getAllDateData($hallData),
         ]);
     }
 
