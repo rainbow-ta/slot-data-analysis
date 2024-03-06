@@ -98,14 +98,28 @@ class ScrapeAnaslot extends Command
 
     private function scrape($hall, $formattedDate)
     {
+        $client = new \GuzzleHttp\Client();
+        $dataArray = [];
+
         // サイトの負荷を軽減するために待機時間を設定
         $sleepTime = rand(1, 5);
         sleep($sleepTime);
 
-        $client = new \GuzzleHttp\Client();
-        $dataArray = [];
-
+        $retryCount = 3;
         $url = "https://ana-slo.com/{$formattedDate}-{$hall->ana_slot_url_name}-data/";
+        for ($i = 0; $i < $retryCount; $i++) {
+            try {
+                $response = $client->request('GET', $url);
+                break;
+            } catch (\Exception $e) {
+                if ($i < $retryCount - 1) {
+                    sleep($sleepTime);
+                } else {
+                    throw $e;
+                }
+            }
+        }
+
         $response = $client->request('GET', $url);
         $html = $response->getBody()->getContents();
         $crawler = new Crawler($html);
