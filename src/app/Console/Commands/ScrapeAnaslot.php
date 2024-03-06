@@ -73,6 +73,8 @@ class ScrapeAnaslot extends Command
             $currentDate->addDay();
         }
 
+        $this->highSettingService->updateHighSettingFromInterviewResults();
+
         // プログレスバー終了
         $progressBar->finish();
         $output->writeln("\n");
