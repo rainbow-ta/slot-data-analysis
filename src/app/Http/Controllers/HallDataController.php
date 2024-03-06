@@ -19,10 +19,9 @@ class HallDataController extends Controller
 
     public function event($hallId)
     {
-        $hallDataService = new HallDataService();
-        $hallData = $hallDataService->fetchHallData($hallId, 30);  // TODO:期間を指定出来るようにする
-
         $eventHallDataService = new EventHallDataService();
+        $hallData = $eventHallDataService->getDataWithEventDate($hallId);
+
         $differenceCoinsBySlotMachines = $eventHallDataService->getDifferenceCoinsBySlotMachines($hallData);
 
         $sumDifferenceCoins = $eventHallDataService->getSumDifferenceCoins($hallData);

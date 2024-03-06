@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Hall extends Model
+class HallEvent extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,8 @@ class Hall extends Model
         'updated_at',
     ];
 
-    public function hallEvents()
+    public function hall()
     {
-        return $this->hasMany(HallEvent::class);
+        return $this->belongsTo(Hall::class);
     }
 }
