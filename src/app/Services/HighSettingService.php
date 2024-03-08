@@ -55,4 +55,26 @@ class HighSettingService
         $path = 'database/.sql/update_hall_data_is_high_setting.sql';
         DB::unprepared(file_get_contents($path));
     }
+
+    public function getHighSettingMachines($hallData)
+    {
+        $highSettingMachines = [];
+
+        foreach ($hallData as $data) {
+            $date = $data['date'];
+            $machineName = $data['slotMachine']['name'];
+
+            if (!isset($highSettingMachines[$machineName][$date])) {
+                $highSettingMachines[$machineName][$date]['count'] = 0;
+                $highSettingMachines[$machineName][$date]['high_setting_count'] = 0;
+            }
+
+            $highSettingMachines[$machineName][$date]['count']++;
+            if ($data['is_high_setting']) {
+                $highSettingMachines[$machineName][$date]['high_setting_count']++;
+            }
+        }
+
+        return $highSettingMachines;
+    }
 }

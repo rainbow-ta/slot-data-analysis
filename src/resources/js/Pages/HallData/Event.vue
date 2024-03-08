@@ -18,7 +18,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  machineWinRates: {
+  highSettingMachines: {
     type: Object,
     required: true,
   },
@@ -161,7 +161,7 @@ th.sticky {
           </thead>
           <tbody>
             <tr
-              v-for="(dateArray, machineName) in machineWinRates"
+              v-for="(dateArray, machineName) in highSettingMachines"
               :key="machineName"
             >
               <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ machineName }}</th>
@@ -170,16 +170,11 @@ th.sticky {
                 :key="date"
                 class="border px-4 py-2 text-gray-700"
                 :class="{
-                  'bg-yellow-50': dateArray[date] && dateArray[date]['average_difference_coins'] >= 1 && dateArray[date]['average_difference_coins'] <= 1000,
-                  'bg-green-100': dateArray[date] && dateArray[date]['average_difference_coins'] > 1000 && dateArray[date]['average_difference_coins'] <= 2000,
-                  'bg-red-200': dateArray[date] && dateArray[date]['average_difference_coins'] > 2000
+                  'bg-red-200': dateArray[date] && dateArray[date]['high_setting_count']
                 }"
               >
                 <template v-if="dateArray[date]">
-                  <div>{{ dateArray[date]['win_count'] }}/{{ dateArray[date]['count'] }}台</div>
-                  <div>{{ dateArray[date]['average_kikaiwari'] }}%</div>
-                  <div>{{ dateArray[date]['average_game_count'].toLocaleString('ja-JP') }}G</div>
-                  <div>{{ dateArray[date]['average_difference_coins'].toLocaleString('ja-JP') }}枚</div>
+                  <div>{{ dateArray[date]['high_setting_count'] }}/{{ dateArray[date]['count'] }}台</div>
                 </template>
               </td>
             </tr>

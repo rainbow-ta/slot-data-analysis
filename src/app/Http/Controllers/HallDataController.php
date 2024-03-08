@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Models\Hall;
 use App\Services\HallDataService;
 use App\Services\EventHallDataService;
+use App\Services\HighSettingService;
 
 class HallDataController extends Controller
 {
@@ -21,6 +22,7 @@ class HallDataController extends Controller
     {
         $hallDataService = new HallDataService();
         $eventHallDataService = new EventHallDataService();
+        $highSettingService = new HighSettingService();
         $hallData = $eventHallDataService->getDataWithEventDate($hallId);
 
         $differenceCoinsBySlotMachines = $eventHallDataService->getDifferenceCoinsBySlotMachines($hallData);
@@ -33,7 +35,7 @@ class HallDataController extends Controller
             'differenceCoinsBySlotMachines' => $differenceCoinsBySlotMachines,
             'sortSumDifferenceCoins' => $sortSumDifferenceCoins,
             'allDate' => $hallData->unique('date')->pluck('date'),
-            'machineWinRates' => $hallDataService->getMachineWinRates($hallData),
+            'highSettingMachines' => $highSettingService->getHighSettingMachines($hallData),
             'allDateData' => $hallDataService->getAllDateData($hallData),
         ]);
     }
