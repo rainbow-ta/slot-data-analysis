@@ -77,4 +77,35 @@ class HighSettingService
 
         return $highSettingMachines;
     }
+
+    /**
+     * ホールデータを基に高設定の台番号データを返却する
+     *
+     * @param \Illuminate\Support\Collection $hallData
+     *
+     * @return array
+     */
+    public function calculateHighSettingSlotNumbers($hallData)
+    {
+        return $hallData->where('is_high_setting', 1)->groupBy('slot_number')->map(function ($group) {
+            $count = $group->count();
+            $sumGameCount = $group->sum('game_count');
+            $sumDifferenceCoins = $group->sum('difference_coins');
+
+            $averageGameCount = 0;
+            $averageRtp = 0;
+            if ($sumGameCount) {
+                $averageGameCount = floor($sumGameCount / $count);
+                $averageRtp = number_format((($sumGameCount * self::COINS_PER_SPIN + $sumDifferenceCoins) / ($sumGameCount * self::COINS_PER_SPIN) * 100), 2);
+            }
+
+            return [
+                'slot_number' => $group->first()['slot_number'],
+                'count' => $count,
+                'average_game_count' => $averageGameCount,
+                'average_rtp' => $averageRtp,
+                'slot_machine_name' => $group->first()->slotMachine->name,
+            ];
+        })->sortBy('slot_number')->sortByDesc('average_rtp')->sortByDesc('count')->values()->all();
+    }
 }

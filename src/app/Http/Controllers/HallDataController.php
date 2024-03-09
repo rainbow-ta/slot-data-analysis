@@ -27,15 +27,13 @@ class HallDataController extends Controller
 
         $differenceCoinsBySlotMachines = $eventHallDataService->getDifferenceCoinsBySlotMachines($hallData);
 
-        $sumDifferenceCoins = $eventHallDataService->getSumDifferenceCoins($hallData);
-        $sortSumDifferenceCoins = $sumDifferenceCoins->sortByDesc('sum_difference_coins')->values();
-
         return Inertia::render('HallData/Event', [
             'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
             'differenceCoinsBySlotMachines' => $differenceCoinsBySlotMachines,
-            'sortSumDifferenceCoins' => $sortSumDifferenceCoins,
             'allDate' => $hallData->unique('date')->pluck('date'),
             'highSettingMachines' => $highSettingService->getHighSettingMachines($hallData),
+            'uniqueDateCount' => $hallData->unique('date')->count(),
+            'highSettingSlotNumbers' => $highSettingService->calculateHighSettingSlotNumbers($hallData),
             'allDateData' => $hallDataService->getAllDateData($hallData),
         ]);
     }

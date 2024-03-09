@@ -10,7 +10,11 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  sortSumDifferenceCoins: {
+  uniqueDateCount: {
+    type: Number,
+    required: true,
+  },
+  highSettingSlotNumbers: {
     type: Object,
     required: true,
   },
@@ -41,6 +45,12 @@ const maxLength = 17;
 const truncateText = (text) => {
   return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 }
+
+const calculateInjectionRate = (count) => {
+  const injectionRate = count / props.uniqueDateCount * 100;
+
+  return `${injectionRate}%（${count}/${props.uniqueDateCount}回）`;
+};
 </script>
 
 <style scoped>
@@ -101,38 +111,33 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">台番号ごとの差枚</h2>
+        <h2 class="text-3xl font-bold">台番号ごとの投入率</h2>
       </div>
 
       <div class="table-container inline-block">
         <table
-          v-if="sortSumDifferenceCoins.length > 0"
+          v-if="highSettingSlotNumbers.length > 0"
           class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
         >
           <thead class="text-xs text-gray-700 uppercase bg-gray-200">
             <tr>
               <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
               <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">差枚</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">投入率</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">平均G数</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">平均機械割</th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="coin in sortSumDifferenceCoins"
-              :key="coin"
+              v-for="slotNumber in highSettingSlotNumbers"
+              :key="slotNumber"
             >
-              <td class="border px-4 py-2 text-gray-700">{{ coin.slot_number }}</td>
-              <td class="border px-4 py-2 text-gray-700">{{ coin.slot_machine_name }}</td>
-              <td
-                class="border px-4 py-2 text-gray-700"
-                :class="{
-                  'bg-yellow-50': coin.sum_difference_coins >= 1 && coin.sum_difference_coins <= 10000,
-                  'bg-green-100': coin.sum_difference_coins >= 10001 && coin.sum_difference_coins <= 50000,
-                  'bg-red-200': coin.sum_difference_coins >= 50001,
-                }"
-              >
-                {{ coin.sum_difference_coins.toLocaleString('ja-JP') }}枚
-              </td>
+              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.slot_number }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.slot_machine_name }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ calculateInjectionRate(slotNumber.count) }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.average_game_count }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.average_rtp }}%</td>
             </tr>
           </tbody>
         </table>
