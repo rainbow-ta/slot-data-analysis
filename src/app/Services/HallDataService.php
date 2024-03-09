@@ -90,14 +90,14 @@ class HallDataService
                 $machineWinRates[$machineName][$date]['win_count'] = 0;
                 $machineWinRates[$machineName][$date]['game_count'] = 0;
                 $machineWinRates[$machineName][$date]['difference_coins'] = 0;
-            } else {
-                $machineWinRates[$machineName][$date]['count']++;
-                $machineWinRates[$machineName][$date]['game_count'] += $data['game_count'];
-                $machineWinRates[$machineName][$date]['difference_coins'] += $data['difference_coins'];
-                
-                if ($data['difference_coins'] > 0) {
-                    $machineWinRates[$machineName][$date]['win_count']++;
-                }
+            }
+
+            $machineWinRates[$machineName][$date]['count']++;
+            $machineWinRates[$machineName][$date]['game_count'] += $data['game_count'];
+            $machineWinRates[$machineName][$date]['difference_coins'] += $data['difference_coins'];
+
+            if ($data['difference_coins'] > 0) {
+                $machineWinRates[$machineName][$date]['win_count']++;
             }
         }
 
