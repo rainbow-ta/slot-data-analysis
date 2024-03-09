@@ -23,13 +23,11 @@ class HallDataController extends Controller
         $hallDataService = new HallDataService();
         $eventHallDataService = new EventHallDataService();
         $highSettingService = new HighSettingService();
-        $hallData = $eventHallDataService->getDataWithEventDate($hallId);
 
-        $differenceCoinsBySlotMachines = $eventHallDataService->getDifferenceCoinsBySlotMachines($hallData);
+        $hallData = $eventHallDataService->getDataWithEventDate($hallId);
 
         return Inertia::render('HallData/Event', [
             'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
-            'differenceCoinsBySlotMachines' => $differenceCoinsBySlotMachines,
             'allDate' => $hallData->unique('date')->pluck('date'),
             'highSettingMachines' => $highSettingService->getHighSettingMachines($hallData),
             'uniqueDateCount' => $hallData->unique('date')->count(),

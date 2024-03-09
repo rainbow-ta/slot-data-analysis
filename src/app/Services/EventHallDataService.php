@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Services;
+
 use App\Models\HallData;
+use App\Models\SlotMachine;
 use Illuminate\Support\Facades\DB;
 
 class EventHallDataService
@@ -18,24 +20,6 @@ class EventHallDataService
                     ->whereRaw('hall_events.date = hall_data.date');
             })
             ->get();
-    }
-
-    public function getDifferenceCoinsBySlotMachines($hallData) {
-        $differenceCoinsBySlotMachines = [];
-
-        foreach ($hallData as $data) {
-            $machineName = $data['slotMachine']['name'];
-
-            if (!isset($differenceCoinsBySlotMachines[$machineName])) {
-                $differenceCoinsBySlotMachines[$machineName] = 0;
-            }
-
-            $differenceCoinsBySlotMachines[$machineName] += $data['difference_coins'];
-        }
-
-        arsort($differenceCoinsBySlotMachines);
-
-        return $differenceCoinsBySlotMachines;
     }
 
     public function getSumDifferenceCoins($hallData)
