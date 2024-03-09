@@ -145,7 +145,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">日付ごとのデータ</h2>
+        <h2 class="text-3xl font-bold">全てのデータ</h2>
       </div>
 
       <div class="table-container">
