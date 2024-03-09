@@ -20,18 +20,4 @@ class EventHallDataService
             })
             ->get();
     }
-
-    public function getSumDifferenceCoins($hallData)
-    {
-        return $hallData->groupBy('slot_number')
-            ->map(function ($group) {
-                $slotMachineName = $group->first()->slotMachine->name;
-                $sumDifference = $group->sum('difference_coins');
-                return [
-                    'slot_machine_name' => $slotMachineName,
-                    'slot_number' => $group->first()->slot_number,
-                    'sum_difference_coins' => $sumDifference,
-                ];
-            });
-    }
 }

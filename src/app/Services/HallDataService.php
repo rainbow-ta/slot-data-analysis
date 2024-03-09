@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use App\Models\HallData;
+use App\Models\SlotMachine;
 
 class HallDataService
 {
@@ -149,5 +150,87 @@ class HallDataService
         arsort($differenceCoinsBySlotMachines);
 
         return $differenceCoinsBySlotMachines;
+    }
+
+    public function getSumDifferenceCoins($hallData)
+    {
+        return $hallData->groupBy('slot_number')
+            ->map(function ($group) {
+                $slotMachineName = $group->first()->slotMachine->name;
+                $sumDifference = $group->sum('difference_coins');
+                return [
+                    'slot_machine_name' => $slotMachineName,
+                    'slot_number' => $group->first()->slot_number,
+                    'sum_difference_coins' => $sumDifference,
+                ];
+            });
+    }
+
+    /**
+     * 高設定らしきデータの台番号を返却する
+     * @param collection $hallData
+     * @param collection $differenceCoinsBySlotMachines
+     * @param collection $sortSumDifferenceCoins
+     * @return array
+     */
+    public function getPredictionHighSettingNumbers($hallData, $differenceCoinsBySlotMachines, $sortSumDifferenceCoins)
+    {
+        // 差枚が20000枚以上の機種
+        $keysOver20000 = [];
+        foreach ($differenceCoinsBySlotMachines as $key => $value) {
+            if ($value >= 20000) {
+                $keysOver20000[] = $key;
+            }
+        }
+        $slotMachineIds = SlotMachine::whereIn('name', $keysOver20000)->pluck('id');
+
+        // 差枚が20000枚以上の台番号
+        $filtered = $sortSumDifferenceCoins->filter(function ($item) {
+            return $item['sum_difference_coins'] >= 20000;
+        });
+        $slotNumbers = $filtered->pluck('slot_number');
+
+        return $hallData->whereIn('slot_machines_id', $slotMachineIds)
+            ->whereIn('slot_number', $slotNumbers)
+            ->pluck('slot_number')
+            ->unique();
+    }
+
+    /**
+     * 高設定の台番号を返却する
+     * @param collection $predictionHighSettingNumbers
+     * @param collection $hallData
+     * @return array
+     */
+    public function getHighSettingTotals($predictionHighSettingNumbers, $hallData)
+    {
+        $maxCount = $predictionHighSettingNumbers->count();
+        $filteredHallData = $hallData->filter(function ($item) {
+            return $item->is_high_setting == 1;
+        });
+
+        $highSettingTotals = [];
+        foreach ($filteredHallData as $data) {
+            $date = $data['date'];
+
+            if (!isset($highSettingTotals[$date])) {
+                $highSettingTotals[$date]['win_count'] = 0;
+            } else {
+                if ($predictionHighSettingNumbers->contains($data['slot_number'])) {
+                    $highSettingTotals[$date]['win_count']++;
+                }
+            }
+        }
+
+        foreach ($highSettingTotals as $key => $val) {
+            $percentage = 0;
+            if ($val['win_count']) {
+                $percentage = round(($val['win_count'] / $maxCount) * 100, 1);
+            }
+            $highSettingTotals[$key]['percentage'] = $percentage . '%';
+            $highSettingTotals[$key]['count'] = $maxCount;
+        }
+
+        return $highSettingTotals;
     }
 }
