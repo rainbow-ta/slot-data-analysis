@@ -29,7 +29,7 @@ class HallDataController extends Controller
         return Inertia::render('HallData/Event', [
             'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
             'allDate' => $hallData->unique('date')->pluck('date'),
-            'highSettingMachines' => $highSettingService->getHighSettingMachines($hallData),
+            'highSettingMachines' => $highSettingService->calculateHighSettingMachines($hallData),
             'uniqueDateCount' => $hallData->unique('date')->count(),
             'highSettingSlotNumbers' => $highSettingService->calculateHighSettingSlotNumbers($hallData),
             'allDateData' => $hallDataService->getAllDateData($hallData),

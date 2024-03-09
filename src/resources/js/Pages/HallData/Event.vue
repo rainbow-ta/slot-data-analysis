@@ -68,6 +68,50 @@ th.sticky {
       </div>
 
       <div class="my-8">
+        <h2 class="text-3xl font-bold">機種ごとの投入率</h2>
+      </div>
+
+      <div class="table-container">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase">
+            <tr>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">投入率</th>
+              <th
+                v-for="date in allDate"
+                :key="date"
+                class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+              >
+                {{ date }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(dateArray, machineName) in highSettingMachines"
+              :key="machineName"
+            >
+              <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ machineName }}</th>
+
+              <td class="border px-4 py-2 text-gray-700">{{ calculateInjectionRate(dateArray['total']) }}</td>
+              <td
+                v-for="date in allDate"
+                :key="date"
+                class="border px-4 py-2 text-gray-700"
+                :class="{
+                  'bg-red-200': dateArray[date] && dateArray[date]['high_setting_count']
+                }"
+              >
+                <template v-if="dateArray[date]">
+                  <div>{{ dateArray[date]['high_setting_count'] }}/{{ dateArray[date]['count'] }}台</div>
+                </template>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="my-8">
         <h2 class="text-3xl font-bold">台番号ごとの投入率</h2>
       </div>
 
@@ -100,47 +144,6 @@ th.sticky {
         </table>
         <table v-else>
           データがありません。
-        </table>
-      </div>
-
-      <div class="my-8">
-        <h2 class="text-3xl font-bold">機種ごとのデータ</h2>
-      </div>
-
-      <div class="table-container">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase">
-            <tr>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
-              <th
-                v-for="date in allDate"
-                :key="date"
-                class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
-              >
-                {{ date }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(dateArray, machineName) in highSettingMachines"
-              :key="machineName"
-            >
-              <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ machineName }}</th>
-              <td
-                v-for="date in allDate"
-                :key="date"
-                class="border px-4 py-2 text-gray-700"
-                :class="{
-                  'bg-red-200': dateArray[date] && dateArray[date]['high_setting_count']
-                }"
-              >
-                <template v-if="dateArray[date]">
-                  <div>{{ dateArray[date]['high_setting_count'] }}/{{ dateArray[date]['count'] }}台</div>
-                </template>
-              </td>
-            </tr>
-          </tbody>
         </table>
       </div>
 

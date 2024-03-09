@@ -56,7 +56,7 @@ class HighSettingService
         DB::unprepared(file_get_contents($path));
     }
 
-    public function getHighSettingMachines($hallData)
+    public function calculateHighSettingMachines($hallData)
     {
         $highSettingMachines = [];
 
@@ -72,6 +72,16 @@ class HighSettingService
             $highSettingMachines[$machineName][$date]['count']++;
             if ($data['is_high_setting']) {
                 $highSettingMachines[$machineName][$date]['high_setting_count']++;
+            }
+        }
+
+        foreach ($highSettingMachines as $machineName => $gameData) {
+            $highSettingMachines[$machineName]['total'] = 0;
+
+            foreach ($gameData as $date => $data) {
+                if (isset($data['high_setting_count']) && $data['high_setting_count'] !== 0) {
+                    $highSettingMachines[$machineName]['total']++;
+                }
             }
         }
 
