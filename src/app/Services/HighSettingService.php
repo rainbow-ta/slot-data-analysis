@@ -75,15 +75,21 @@ class HighSettingService
             }
         }
 
-        foreach ($highSettingMachines as $machineName => $gameData) {
-            $highSettingMachines[$machineName]['total'] = 0;
+        foreach ($highSettingMachines as $machineName => &$gameData) {
+            $total = 0;
 
             foreach ($gameData as $date => $data) {
                 if (isset($data['high_setting_count']) && $data['high_setting_count'] !== 0) {
-                    $highSettingMachines[$machineName]['total']++;
+                    $total++;
                 }
             }
+
+            $gameData['total'] = $total;
         }
+
+        uasort($highSettingMachines, function ($a, $b) {
+            return $b['total'] - $a['total'];
+        });
 
         return $highSettingMachines;
     }
