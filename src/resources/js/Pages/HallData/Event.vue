@@ -42,11 +42,15 @@ const truncateText = (text) => {
   return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
 }
 
-const calculateInjectionRate = (count) => {
-  const injectionRate = count / props.uniqueDateCount * 100;
+const generateInjectionRateString = (count) => {
+  const injectionRate = calculateInjectionRate(count);
 
   return `${injectionRate}%（${count}/${props.uniqueDateCount}回）`;
 };
+
+const calculateInjectionRate = (count) => {
+  return count / props.uniqueDateCount * 100;
+}
 </script>
 
 <style scoped>
@@ -57,6 +61,10 @@ const calculateInjectionRate = (count) => {
 
 th.sticky {
   position: sticky;
+}
+
+.bg-gold {
+  background: linear-gradient(45deg, #B67B03 0%, #DAAF08 45%, #FEE9A0 70%, #DAAF08 85%, #B67B03 90% 100%);
 }
 </style>
 
@@ -93,14 +101,17 @@ th.sticky {
             >
               <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ machineName }}</th>
 
-              <td class="border px-4 py-2 text-gray-700">{{ calculateInjectionRate(dateArray['total']) }}</td>
+              <td 
+              :class="{
+                'bg-green-100': calculateInjectionRate(dateArray['total']) >= 50 && calculateInjectionRate(dateArray['total']) <= 80,
+                'bg-red-200': calculateInjectionRate(dateArray['total']) >= 80,
+                'bg-gold': calculateInjectionRate(dateArray['total']) === 100,
+              }"
+              class="border px-4 py-2 text-gray-700">{{ generateInjectionRateString(dateArray['total']) }}</td>
               <td
                 v-for="date in allDate"
                 :key="date"
                 class="border px-4 py-2 text-gray-700"
-                :class="{
-                  'bg-red-200': dateArray[date] && dateArray[date]['high_setting_count']
-                }"
               >
                 <template v-if="dateArray[date]">
                   <div>{{ dateArray[date]['high_setting_count'] }}/{{ dateArray[date]['count'] }}台</div>
@@ -136,7 +147,16 @@ th.sticky {
             >
               <td class="border px-4 py-2 text-gray-700">{{ slotNumber.slot_number }}</td>
               <td class="border px-4 py-2 text-gray-700">{{ slotNumber.slot_machine_name }}</td>
-              <td class="border px-4 py-2 text-gray-700">{{ calculateInjectionRate(slotNumber.count) }}</td>
+              <td
+                :class="{
+                  'bg-green-100': calculateInjectionRate(slotNumber.count) >= 50 && calculateInjectionRate(slotNumber.count) <= 80,
+                  'bg-red-200': calculateInjectionRate(slotNumber.count) >= 80,
+                  'bg-gold': calculateInjectionRate(slotNumber.count) === 100,
+                }"
+                class="border px-4 py-2 text-gray-700"
+              >
+                {{ generateInjectionRateString(slotNumber.count) }}
+              </td>
               <td class="border px-4 py-2 text-gray-700">{{ slotNumber.average_game_count }}</td>
               <td class="border px-4 py-2 text-gray-700">{{ slotNumber.average_rtp }}%</td>
             </tr>
