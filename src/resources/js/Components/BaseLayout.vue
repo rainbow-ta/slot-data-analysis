@@ -9,7 +9,8 @@ import { Link } from '@inertiajs/vue3'
         :href="'/'"
         class="inline-flex items-center text-black-800 text-2xl md:text-3xl font-bold gap-2.5"
       >
-        Home
+        <img src="/public/logo.png" alt="ロゴ" style="width: 50px; height: 50px; border-radius: 50%;">
+        スロアナ
       </Link>
     </header>
 
@@ -20,7 +21,7 @@ import { Link } from '@inertiajs/vue3'
 
     <footer class="w-full mx-auto p-4 md:py-8">
       <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-      <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">&copy; 2023 slot-data-analysis.</span>
+      <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">&copy; 2023 スロアナ</span>
     </footer>
   </body>
 </template>
