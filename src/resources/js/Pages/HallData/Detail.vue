@@ -1,5 +1,26 @@
 <script setup>
 import BaseLayout from '@/Components/BaseLayout.vue';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'vue-chartjs';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+)
 
 const props = defineProps({
   hallName: {
@@ -30,6 +51,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  slumpSlotNumbers: {
+    type: Object,
+    required: true,
+  },
 });
 
 // TODO:他の画面でも使う処理を共通化する
@@ -56,6 +81,38 @@ const formatDifferenceCoins = (coins) => {
 const maxLength = 17;
 const truncateText = (text) => {
   return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+}
+
+const generateOptions = (data) => {
+  const count = props.allDate.length;
+  const prefix = data['total'] < 0 ? '' : '+';
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: count + '日間の差枚数：' + prefix + data['total'],
+        color: prefix ? '#ff0000' : '#374151',
+      }
+    }
+  }
+}
+
+const generateData = (data) => {
+  const newData = props.allDate.map(date => data[date] || null);
+
+  return {
+    labels: props.allDate,
+    datasets: [
+      {
+        label: '差枚数',
+        backgroundColor: '#f87979',
+        data: newData
+      }
+    ]
+  }
 }
 </script>
 
@@ -238,6 +295,21 @@ th.sticky {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="my-8">
+        <h2 class="text-3xl font-bold">台番号ごとのスランプグラフ</h2>
+      </div>
+
+      <div
+        v-for="(data, slotNumber) in slumpSlotNumbers"
+        class="mb-8"
+      >
+        <h3 class="text-2xl font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
+
+        <div style="height:300px;">
+          <Line :data=generateData(data) :options=generateOptions(data) />
+        </div>
       </div>
     </template>
   </BaseLayout>

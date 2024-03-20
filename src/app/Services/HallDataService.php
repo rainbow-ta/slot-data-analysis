@@ -233,4 +233,41 @@ class HallDataService
 
         return $highSettingTotals;
     }
+
+    public function calculateSlumpSlotNumbers($allDateData)
+    {
+        $slumpSlotNumbers = [];
+        $slotName = '';
+        $reversedDateData = [];
+        $total = 0;
+
+        foreach ($allDateData as $slotNumber => $dateData) {
+            if (empty($dateData)) {
+                continue;
+            }
+
+            $firstKey = array_key_first($dateData);
+            $slotName = $dateData[$firstKey]['name'];
+
+            $reversedDateData = array_reverse($dateData);
+            $yesterday = '';
+
+            foreach ($reversedDateData as $date => $data) {
+                if ($yesterday) {
+                    $slumpSlotNumbers[$slotNumber][$date] = $slumpSlotNumbers[$slotNumber][$yesterday] + $data['difference_coins'];
+                } else {
+                    $slumpSlotNumbers[$slotNumber][$date] = $data['difference_coins'];
+                }
+
+                $total += $data['difference_coins'];
+                $yesterday = $date;
+            }
+
+            $slumpSlotNumbers[$slotNumber]['slotName'] = $slotName;
+            $slumpSlotNumbers[$slotNumber]['total'] = $total;
+            $total = 0;
+        }
+
+        return $slumpSlotNumbers;
+    }
 }
