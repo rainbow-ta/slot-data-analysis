@@ -60,6 +60,7 @@ class HallDataController extends Controller
             'allDate' => $hallData->unique('date')->pluck('date'),
             'machineWinRates' => $hallDataService->getMachineWinRates($hallData),
             'allDateData' => $allDateData,
+            'slumpSlotNumbers' => $hallDataService->calculateSlumpSlotNumbers($allDateData),
         ]);
     }
 }
