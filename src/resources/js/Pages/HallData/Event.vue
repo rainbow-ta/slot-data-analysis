@@ -49,7 +49,7 @@ const generateInjectionRateString = (count) => {
 };
 
 const calculateInjectionRate = (count) => {
-  return count / props.uniqueDateCount * 100;
+  return (count / props.uniqueDateCount * 100).toFixed(1);
 }
 </script>
 
