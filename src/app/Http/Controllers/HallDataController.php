@@ -36,10 +36,15 @@ class HallDataController extends Controller
         ]);
     }
 
-    public function detail($hallId)
+    public function detail(Request $request)
     {
+        $hall = Hall::whereId($request->id)->first();
+
+        $startDate = $request->startDate ?? now()->subDays(14)->startOfDay()->toDateString();
+        $endDate = $request->endDate ?? now()->endOfDay()->toDateString();
+
         $hallDataService = new HallDataService();
-        $hallData = $hallDataService->fetchHallData($hallId, 30);  // TODO:期間を指定出来るようにする
+        $hallData = $hallDataService->fetchHallData($request->id, $startDate, $endDate);
 
         $matstubiArray = $hallDataService->matsubiCount($hallData);
         $matsubiTotals = $hallDataService->matsubiTotals($matstubiArray);
@@ -53,7 +58,7 @@ class HallDataController extends Controller
         $allDateData = $hallDataService->getAllDateData($hallData);
 
         return Inertia::render('HallData/Detail', [
-            'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
+            'hall' => $hall,
             'matsubiArray' => $matstubiArray,
             'matsubiTotals' => $matsubiTotals,
             'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
@@ -61,6 +66,8 @@ class HallDataController extends Controller
             'machineWinRates' => $hallDataService->getMachineWinRates($hallData),
             'allDateData' => $allDateData,
             'slumpSlotNumbers' => $hallDataService->calculateSlumpSlotNumbers($allDateData),
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ]);
     }
 }

@@ -9,13 +9,11 @@ class HallDataService
     // TODO:Enumなどで管理する
     CONST COINS_PER_SPIN = 3;
 
-    public function fetchHallData($hallId, $period = null) {
-        return HallData::whereHallId($hallId)
+    public function fetchHallData($hallId, $startDate, $endDate) {
+        return HallData::where('hall_id', $hallId)
             ->with('slotMachine')
+            ->whereBetween('date', [$startDate, $endDate])
             ->orderBy('date', 'desc')
-            ->when($period, function($q, $period) {
-                return $q->where('date', '>=', now()->subDays($period));
-            })
             ->get();
     }
 

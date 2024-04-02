@@ -1,4 +1,6 @@
 <script setup>
+import { router } from '@inertiajs/vue3'
+import { reactive } from 'vue';
 import BaseLayout from '@/Components/BaseLayout.vue';
 import {
   Chart as ChartJS,
@@ -23,7 +25,7 @@ ChartJS.register(
 )
 
 const props = defineProps({
-  hallName: {
+  hall: {
     type: String,
     required: true,
   },
@@ -55,7 +57,27 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  startDate: {
+    type: [Date, String],
+    required: true,
+  },
+  endDate: {
+    type: [Date, String],
+    required: true,
+  },
 });
+
+const form = reactive({
+  startDate: props.startDate,
+  endDate: props.endDate,
+});
+
+const fetchData = () => {
+  router.visit('/hall-data/' + props.hall.id + '/detail', {
+    method: 'get',
+    data: form,
+  });
+};
 
 // TODO:他の画面でも使う処理を共通化する
 const matsubiNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -131,8 +153,22 @@ th.sticky {
   <BaseLayout>
     <template #main>
       <div class="my-8">
-        <h1 class="text-4xl font-bold">{{ hallName }}&nbsp;データ詳細</h1>
+        <h1 class="text-4xl font-bold">{{ hall.name }}&nbsp;データ詳細</h1>
       </div>
+
+      <form @submit.prevent="fetchData" class="bg-gray-200 shadow-md rounded px-4 pt-6 mb-4 max-w-lg flex flex-wrap items-center">
+        <div class="w-full md:w-1/3 mb-6">
+          <label for="startDate" class="block text-gray-700 text-sm font-bold mb-2">開始日:</label>
+          <input type="date" id="startDate" v-model="form.startDate" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="w-full md:w-1/3 mb-6 md:pl-2">
+          <label for="endDate" class="block text-gray-700 text-sm font-bold mb-2">終了日:</label>
+          <input type="date" id="endDate" v-model="form.endDate" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="w-full md:w-1/3 md:pl-6">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline cursor-pointer">絞り込み</button>
+        </div>
+      </form>
 
       <div class="my-8">
         <h2 class="text-3xl font-bold">末尾ごとのデータ</h2>
