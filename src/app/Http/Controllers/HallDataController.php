@@ -11,13 +11,6 @@ use App\Services\HighSettingService;
 
 class HallDataController extends Controller
 {
-    public function index()
-    {
-        return Inertia::render('HallData/Index', [
-            'halls' => Hall::get(),
-        ]);
-    }
-
     public function event($hallId)
     {
         $hallDataService = new HallDataService();
