@@ -114,6 +114,10 @@ class ScrapeAnaslot extends Command
                 $response = $client->request('GET', $url);
                 break;
             } catch (\Exception $e) {
+                if ($e->getCode() === 404) {
+                    return null;
+                }
+
                 if ($i < $retryCount - 1) {
                     sleep($sleepTime);
                 } else {
@@ -122,7 +126,6 @@ class ScrapeAnaslot extends Command
             }
         }
 
-        $response = $client->request('GET', $url);
         $html = $response->getBody()->getContents();
         $crawler = new Crawler($html);
 
