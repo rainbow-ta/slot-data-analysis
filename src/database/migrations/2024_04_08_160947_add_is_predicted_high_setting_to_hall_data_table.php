@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('hall_data', function (Blueprint $table) {
-            $table->boolean('is_predicted_high_setting')->nullable()->default(0);
+            $table->boolean('is_predicted_high_setting')->nullable()->default(0)->after('is_high_setting');
         });
     }
 
