@@ -166,7 +166,7 @@ class ScrapeAnaslot extends Command
                     'big_bonus_probability' => $rowData[7] ?? null,
                     'regular_bonus_probability' => $rowData[8] ?? null,
                     'date' => $formattedDate,
-                    'is_high_setting' => $isHighSetting,
+                    'is_predicted_high_setting' => $isHighSetting,
                     'hall_id' => $hall->id,
                 ];
             } else {
@@ -183,7 +183,7 @@ class ScrapeAnaslot extends Command
                     'regular_bonus_probability' => $rowData[9] ?? null,
                     'art_probability' => $rowData[10] ?? null,
                     'date' => $formattedDate,
-                    'is_high_setting' => $isHighSetting,
+                    'is_predicted_high_setting' => $isHighSetting,
                     'hall_id' => $hall->id,
                 ];
             }
