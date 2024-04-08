@@ -45,7 +45,10 @@ class ScrapeAnaslot extends Command
         date_default_timezone_set('Asia/Tokyo');
 
         $output = new ConsoleOutput();
-        $halls = Hall::whereNotNull('ana_slot_url_name')->select('id', 'ana_slot_url_name')->get();
+        $halls = Hall::whereNotNull('ana_slot_url_name')
+            ->where('is_scrape', 1)
+            ->select('id', 'ana_slot_url_name')
+            ->get();
 
         if ($halls->isEmpty()) {
             $this->info('No halls found.');
