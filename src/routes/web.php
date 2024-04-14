@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HallDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [App\Http\Controllers\HallController::class, 'index']);
-Route::get('hall-data/{id}/event', [App\Http\Controllers\HallDataController::class, 'event']);
-Route::get('hall-data/{id}/detail', [App\Http\Controllers\HallDataController::class, 'detail']);
+Route::get('halls/{id}/hall-data/event', [App\Http\Controllers\HallDataController::class, 'event']);
+Route::get('halls/{id}/hall-data/detail', [App\Http\Controllers\HallDataController::class, 'detail']);
+Route::resource('halls/{id}/hall-data', HallDataController::class);

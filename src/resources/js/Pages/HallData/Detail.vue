@@ -1,5 +1,5 @@
 <script setup>
-import { router } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 import BaseLayout from '@/Components/BaseLayout.vue';
 import {
@@ -73,7 +73,7 @@ const form = reactive({
 });
 
 const fetchData = () => {
-  router.visit('/hall-data/' + props.hall.id + '/detail', {
+  router.visit('/halls/' + props.hall.id + '/hall-data/detail', {
     method: 'get',
     data: form,
   });

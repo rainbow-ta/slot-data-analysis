@@ -38,10 +38,10 @@ defineProps({
                     <td class="whitespace-nowrap px-6 py-4 font-medium">
                       {{ hall.name }}
                       <div class="py-2">
-                        <Link :href="'/hall-data/' + hall.id + '/event'">
+                        <Link :href="'/halls/' + hall.id + '/hall-data/event'">
                           <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">イベント日</span>
                         </Link>
-                        <Link :href="'/hall-data/' + hall.id + '/detail'">
+                        <Link :href="'/halls/' + hall.id + '/hall-data/detail'">
                           <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">詳細</span>
                         </Link>
                       </div>
