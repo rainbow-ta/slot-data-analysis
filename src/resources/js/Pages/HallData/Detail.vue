@@ -153,7 +153,7 @@ th.sticky {
   <BaseLayout>
     <template #main>
       <div class="my-8">
-        <h1 class="text-4xl font-bold">{{ hall.name }}&nbsp;データ詳細</h1>
+        <h1 class="text-3xl font-bold">{{ hall.name }}&nbsp;データ詳細</h1>
       </div>
 
       <form @submit.prevent="fetchData" class="bg-gray-200 shadow-md rounded px-4 pt-6 mb-4 max-w-lg flex flex-wrap items-center">
@@ -171,7 +171,7 @@ th.sticky {
       </form>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">末尾ごとのデータ</h2>
+        <h2 class="text-2xl font-bold">末尾ごとのデータ</h2>
       </div>
 
       <div class="table-container">
@@ -224,7 +224,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">台番号ごとのデータ</h2>
+        <h2 class="text-2xl font-bold">台番号ごとのデータ</h2>
       </div>
 
       <div class="table-container inline-block">
@@ -250,7 +250,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">機種ごとのデータ</h2>
+        <h2 class="text-2xl font-bold">機種ごとのデータ</h2>
       </div>
 
       <div class="table-container">
@@ -296,7 +296,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">日付ごとのデータ</h2>
+        <h2 class="text-2xl font-bold">日付ごとのデータ</h2>
       </div>
 
       <div class="table-container">
@@ -334,14 +334,14 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">台番号ごとのスランプグラフ</h2>
+        <h2 class="text-2xl font-bold">台番号ごとのスランプグラフ</h2>
       </div>
 
       <div
         v-for="(data, slotNumber) in slumpSlotNumbers"
         class="mb-8"
       >
-        <h3 class="text-2xl font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
+        <h3 class="text-xl font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
 
         <div style="height:300px;">
           <Line :data=generateData(data) :options=generateOptions(data) />

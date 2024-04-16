@@ -72,11 +72,11 @@ th.sticky {
   <base-layout>
     <template #main>
       <div class="my-8">
-        <h1 class="text-4xl font-bold">{{ hallName }}&nbsp;イベント日</h1>
+        <h1 class="text-3xl font-bold">{{ hallName }}&nbsp;イベント日</h1>
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">機種ごとの投入率</h2>
+        <h2 class="text-2xl font-bold">機種ごとの投入率</h2>
       </div>
 
       <div class="table-container">
@@ -123,7 +123,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">台番号ごとの投入率</h2>
+        <h2 class="text-2xl font-bold">台番号ごとの投入率</h2>
       </div>
 
       <div class="table-container inline-block">
@@ -168,7 +168,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-3xl font-bold">全てのデータ</h2>
+        <h2 class="text-2xl font-bold">全てのデータ</h2>
       </div>
 
       <div class="table-container">
