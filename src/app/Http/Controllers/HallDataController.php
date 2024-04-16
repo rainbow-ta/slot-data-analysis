@@ -2,15 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\HallDataNotFoundException;
+use App\Http\Requests\HallData\IndexRequest;
+use App\Http\Requests\HallData\UpdateRequest;
+use App\Http\Resources\HallDataResource;
+use App\UseCases\HallData\IndexAction;
+use App\UseCases\HallData\UpdateAction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Hall;
 use App\Services\HallDataService;
 use App\Services\EventHallDataService;
 use App\Services\HighSettingService;
+use Carbon\Carbon;
 
 class HallDataController extends Controller
 {
+    public function index(IndexRequest $request, IndexAction $action, $hallId)
+    {
+        $validated = $request->validated();
+
+        $date = $validated['date'] ?? Carbon::today()->format('Y-m-d');
+
+        return Inertia::render('HallData/Index', [
+            'hallCollection' => new HallDataResource($action($hallId, $date), $date),
+        ]);
+    }
+
+    public function update(UpdateRequest $request, UpdateAction $action, $hallId, $hallDataId)
+    {
+        $validated = $request->validated();
+
+        try {
+            $action($hallDataId, $validated['is_high_setting']);
+
+            return redirect()->route('hall-data.index', ['id' => $hallId, 'date' => $validated['date']]);
+        } catch (HallDataNotFoundException $e) {
+            return abort(404, $e->getMessage());
+        } catch (\Exception $e) {
+            return abort(500);
+        }
+    }
+
     public function event($hallId)
     {
         $hallDataService = new HallDataService();
