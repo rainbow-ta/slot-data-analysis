@@ -75,12 +75,6 @@ class HallDataController extends Controller
         $matstubiArray = $hallDataService->matsubiCount($hallData);
         $matsubiTotals = $hallDataService->matsubiTotals($matstubiArray);
 
-        // 高設定データを取得
-        $differenceCoinsBySlotMachines = $hallDataService->getDifferenceCoinsBySlotMachines($hallData);
-        $sumDifferenceCoins = $hallDataService->getSumDifferenceCoins($hallData);
-        $highSettingNumbers = $hallDataService->getPredictionHighSettingNumbers($hallData, $differenceCoinsBySlotMachines, $sumDifferenceCoins);
-        $highSettingTotals = $hallDataService->getHighSettingTotals($highSettingNumbers, $hallData);
-
         $allDateData = $hallDataService->getAllDateData($hallData);
 
         return Inertia::render('HallData/Detail', [
@@ -94,6 +88,7 @@ class HallDataController extends Controller
             'slumpSlotNumbers' => $hallDataService->calculateSlumpSlotNumbers($allDateData),
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'dateSlotMachineCounts' => $dateSlotMachineCounts,
         ]);
     }
 }
