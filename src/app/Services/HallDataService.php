@@ -21,7 +21,7 @@ class HallDataService
         $matsubiArray = [];
 
         foreach ($hallData as $data) {
-            if ($data['is_high_setting'] === 1) {
+            if ($data['is_high_setting'] === 1 || $data['is_predicted_high_setting'] === 1) {
                 $date = $data['date'];
                 $matsubi = substr($data['slot_number'], -1);
 
@@ -61,17 +61,20 @@ class HallDataService
 
     public function highSettingNumbersCount($hallData)
     {
-        return $hallData->where('is_high_setting', 1)->groupBy('slot_number')->map(function ($group) {
-            $slotNumber = $group->first()['slot_number'];
-            $count = $group->count();
-            $slotMachineName = $group->first()->slotMachine->name;
-            
-            return [
-                'slot_number' => $slotNumber,
-                'count' => $count,
-                'slot_machine_name' => $slotMachineName,
-            ];
-        })->sortBy('slot_number')->sortByDesc('count')->values()->all();
+        return $hallData->filter(function ($item) {
+                return $item->is_high_setting == 1 || $item->is_predicted_high_setting == 1;
+            })->groupBy('slot_number')
+            ->map(function ($group) {
+                $slotNumber = $group->first()['slot_number'];
+                $count = $group->count();
+                $slotMachineName = $group->first()->slotMachine->name;
+                
+                return [
+                    'slot_number' => $slotNumber,
+                    'count' => $count,
+                    'slot_machine_name' => $slotMachineName,
+                ];
+            })->sortBy('slot_number')->sortByDesc('count')->values()->all();
     }
 
     public function getMachineWinRates($hallData)
