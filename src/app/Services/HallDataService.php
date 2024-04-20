@@ -128,6 +128,13 @@ class HallDataService
             $allDateData[$slotNumber][$data['date']]['name'] = $data['slotMachine']['name'];
             $allDateData[$slotNumber][$data['date']]['game_count'] = $data['game_count'];
             $allDateData[$slotNumber][$data['date']]['difference_coins'] = $data['difference_coins'];
+            $allDateData[$slotNumber][$data['date']]['big_bonus_count'] = $data['big_bonus_count'];
+            $allDateData[$slotNumber][$data['date']]['regular_bonus_count'] = $data['regular_bonus_count'];
+            $allDateData[$slotNumber][$data['date']]['art_count'] = $data['art_count'];
+            $allDateData[$slotNumber][$data['date']]['synthesis_probability'] = $data['synthesis_probability'];
+            $allDateData[$slotNumber][$data['date']]['big_bonus_probability'] = $data['big_bonus_probability'];
+            $allDateData[$slotNumber][$data['date']]['regular_bonus_probability'] = $data['regular_bonus_probability'];
+            $allDateData[$slotNumber][$data['date']]['art_probability'] = $data['art_probability'];
             $allDateData[$slotNumber][$data['date']]['is_high_setting'] = $data['is_high_setting'];
         }
 

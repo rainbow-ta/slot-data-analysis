@@ -10,14 +10,15 @@ class EventHallDataService
     public function getDataWithEventDate($hallId)
     {
         return HallData::where('hall_id', $hallId)
-            ->with('slotMachine')
-            ->orderBy('date', 'desc')
-            ->whereExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('hall_events')
-                    ->whereRaw('hall_events.hall_id = hall_data.hall_id')
-                    ->whereRaw('hall_events.date = hall_data.date');
+            ->whereIn('date', function ($query) use ($hallId) {
+                $query->select('date')
+                    ->from('hall_data')
+                    ->where('hall_id', $hallId)
+                    ->whereIsHighSetting(1)
+                    ->groupBy('date');
             })
+            ->with('slotMachine')
+            ->orderByDesc('date')
             ->get();
     }
 }

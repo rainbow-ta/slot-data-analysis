@@ -331,6 +331,10 @@ th.sticky {
                 <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(item.difference_coins) }">
                   {{ formatDifferenceCoins(item.difference_coins?.toLocaleString('ja-JP')) }}枚
                 </div>
+                <div>B:{{ item.big_bonus_count }}（{{ item.big_bonus_probability }}）</div>
+                <div>R:{{ item.regular_bonus_count }}（{{ item.regular_bonus_probability }}）</div>
+                <div>合成確率:{{ item.synthesis_probability }}</div>
+                <div>ART:{{ item.art_count }}（{{ item.art_probability }}）</div>
               </td>
             </tr>
           </tbody>
