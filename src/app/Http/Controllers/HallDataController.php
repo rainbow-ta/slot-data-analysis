@@ -11,8 +11,10 @@ use App\UseCases\HallData\UpdateAction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Hall;
+use App\Models\HallData;
 use App\Services\HallDataService;
 use App\Services\EventHallDataService;
+use App\Services\MonthlyHallDataService;
 use App\Services\HighSettingService;
 use Carbon\Carbon;
 
@@ -52,6 +54,9 @@ class HallDataController extends Controller
 
         $hallData = $eventHallDataService->getDataWithEventDate($hallId);
 
+        $monthlyHallDataService = new MonthlyHallDataService($hallId, 12);
+        $slotMachineCountsByDate = $monthlyHallDataService->calculateSlotMachineCountsByDate();
+
         return Inertia::render('HallData/Event', [
             'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
             'allDate' => $hallData->unique('date')->pluck('date'),
@@ -59,11 +64,15 @@ class HallDataController extends Controller
             'uniqueDateCount' => $hallData->unique('date')->count(),
             'highSettingSlotNumbers' => $highSettingService->calculateHighSettingSlotNumbers($hallData),
             'allDateData' => $hallDataService->getAllDateData($hallData),
+            'slotMachineCountsByDate' => $slotMachineCountsByDate,
         ]);
     }
 
     public function detail(Request $request)
     {
+        $monthlyHallDataService = new MonthlyHallDataService($request->id, 3);
+        $slotMachineCountsByDate = $monthlyHallDataService->calculateSlotMachineCountsByDate(true);
+
         $hall = Hall::whereId($request->id)->first();
 
         $startDate = $request->startDate ?? now()->subDays(14)->startOfDay()->toDateString();
@@ -88,7 +97,7 @@ class HallDataController extends Controller
             'slumpSlotNumbers' => $hallDataService->calculateSlumpSlotNumbers($allDateData),
             'startDate' => $startDate,
             'endDate' => $endDate,
-            'dateSlotMachineCounts' => $dateSlotMachineCounts,
+            'slotMachineCountsByDate' => $slotMachineCountsByDate,
         ]);
     }
 }

@@ -29,6 +29,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  slotMachineCountsByDate: {
+    type: Object,
+    required: true,
+  },
   matsubiArray: {
     type: Object,
     required: true,
@@ -331,6 +335,58 @@ th.sticky {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="my-8">
+        <h2 class="text-2xl font-bold">月単位の機種データ</h2>
+      </div>
+
+      <div
+        v-for="(counts, slotName) in slotMachineCountsByDate"
+        class="mb-8"
+      >
+        <h3 class="text-xl font-bold mb-8">{{ slotName }}</h3>
+
+        <div class="table-container">
+          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase">
+              <tr>
+                <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
+                <th
+                  v-for="slotNumber in counts.slot_number"
+                  class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+                >
+                  {{ slotNumber }}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(count, ym) in counts"
+              >
+                <template v-if="ym == '合計'">
+                  <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ ym }}</th>
+                  <td
+                    v-for="slotNumber in counts.slot_number"
+                    :class="{'bg-red-200': count[slotNumber]['is_top5'] === true}"
+                    class="border px-4 py-2 text-gray-700"
+                  >
+                    {{ count[slotNumber]['count'] }}
+                  </td>
+                </template>
+                <template v-else-if="ym !== 'slot_number'">
+                  <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ ym }}</th>
+                  <td
+                    v-for="slotNumber in counts.slot_number"
+                    class="border px-4 py-2 text-gray-700"
+                  >
+                    {{ count[slotNumber] }}
+                  </td>
+                </template>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div class="my-8">
