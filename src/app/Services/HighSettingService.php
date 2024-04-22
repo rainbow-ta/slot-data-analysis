@@ -2,10 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\HallData;
-use App\Models\HallEvent;
-use Illuminate\Support\Facades\DB;
-
 class HighSettingService
 {
     CONST COINS_PER_SPIN = 3;
@@ -41,19 +37,6 @@ class HighSettingService
     public function calculateExpectedCoins($rtp, $gameCount)
     {
         return ($gameCount * self::COINS_PER_SPIN * $rtp / 100) - ($gameCount * self::COINS_PER_SPIN);
-    }
-
-    public function updateHighSettingFromInterviewResults()
-    {
-        $hallEvents = HallEvent::get();
-        $hallEvents->each(function ($item) {
-            HallData::whereHallId($item->hall_id)
-                ->whereDate('date', $item->date)
-                ->update(['is_high_setting' => false]);
-        });
-
-        $path = 'database/.sql/update_hall_data_is_high_setting.sql';
-        DB::unprepared(file_get_contents($path));
     }
 
     public function calculateHighSettingMachines($hallData)

@@ -14,9 +14,4 @@ class Hall extends Model
         'created_at',
         'updated_at',
     ];
-
-    public function hallEvents()
-    {
-        return $this->hasMany(HallEvent::class);
-    }
 }
