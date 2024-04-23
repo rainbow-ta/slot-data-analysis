@@ -11,7 +11,6 @@ use App\UseCases\HallData\UpdateAction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Hall;
-use App\Models\HallData;
 use App\Services\HallDataService;
 use App\Services\EventHallDataService;
 use App\Services\MonthlyHallDataService;

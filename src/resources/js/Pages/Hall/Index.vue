@@ -25,18 +25,20 @@ defineProps({
                 <thead class="border-b font-medium dark:border-neutral-500">
                   <tr>
                     <th scope="col" class="px-6 py-4">店名</th>
-                    <th scope="col" class="px-6 py-4">P-WORLD</th>
-                    <th scope="col" class="px-6 py-4">DMMぱちタウン</th>
-                    <th scope="col" class="px-6 py-4">イベント媒体</th>
+                    <th scope="col" class="px-6 py-4">外部URL</th>
+                    <th scope="col" class="px-6 py-4">備考</th>
+                    <th scope="col" class="px-6 py-4">更新日</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    v-for="hall in halls"
+                    v-for="hall in halls.data"
                     class="border-b dark:border-neutral-500"
                   >
                     <td class="whitespace-nowrap px-6 py-4 font-medium">
-                      {{ hall.name }}
+                      <Link :href="'/halls/' + hall.id + '/edit'">
+                        {{ hall.name }}
+                      </Link>
                       <div class="py-2">
                         <Link :href="'/halls/' + hall.id + '/hall-data'">
                           <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">データ編集</span>
@@ -49,14 +51,14 @@ defineProps({
                         </Link>
                       </div>
                     </td>
-                    <td class="whitespace-nowrap px-6 py-4 font-medium cursor-pointer">
-                      <a :href="hall.p_world_url" target="_blank">{{ hall.p_world_url }}</a>
+                    <td class="px-6 py-4 font-medium cursor-pointer">
+                      <div v-html="hall.external_url"></div>
                     </td>
-                    <td class="whitespace-nowrap px-6 py-4 font-medium cursor-pointer">
-                      <a :href="hall.dmm_url" target="_blank">{{ hall.dmm_url }}</a>
+                    <td class="px-6 py-4 font-medium">
+                      <div v-html="hall.note"></div>
                     </td>
-                    <td class="whitespace-nowrap px-6 py-4 font-medium cursor-pointer">
-                      <a :href="hall.event_url" target="_blank">{{ hall.event_url }}</a>
+                    <td class="px-6 py-4 font-medium">
+                      <div>{{ hall.updated_at }}</div>
                     </td>
                   </tr>
                 </tbody>
