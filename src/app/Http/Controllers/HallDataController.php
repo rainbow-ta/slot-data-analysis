@@ -37,7 +37,7 @@ class HallDataController extends Controller
         try {
             $action($hallDataId, $validated['is_high_setting']);
 
-            return redirect()->route('hall-data.index', ['id' => $hallId, 'date' => $validated['date']]);
+            return redirect()->route('halls.hall-data.index', ['hall' => $hallId, 'date' => $validated['date']]);
         } catch (HallDataNotFoundException $e) {
             return abort(404, $e->getMessage());
         } catch (\Exception $e) {
