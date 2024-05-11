@@ -69,16 +69,15 @@ class HallDataController extends Controller
 
     public function detail(Request $request)
     {
-        $monthlyHallDataService = new MonthlyHallDataService($request->id, 3);
+        $hallId = $request->hall;
+        $monthlyHallDataService = new MonthlyHallDataService($hallId, 3);
         $slotMachineCountsByDate = $monthlyHallDataService->calculateSlotMachineCountsByDate(true);
-
-        $hall = Hall::whereId($request->id)->first();
 
         $startDate = $request->startDate ?? now()->subDays(14)->startOfDay()->toDateString();
         $endDate = $request->endDate ?? now()->endOfDay()->toDateString();
 
         $hallDataService = new HallDataService();
-        $hallData = $hallDataService->fetchHallData($request->id, $startDate, $endDate);
+        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate);
 
         $matstubiArray = $hallDataService->matsubiCount($hallData);
         $matsubiTotals = $hallDataService->matsubiTotals($matstubiArray);
@@ -86,7 +85,7 @@ class HallDataController extends Controller
         $allDateData = $hallDataService->getAllDateData($hallData);
 
         return Inertia::render('HallData/Detail', [
-            'hall' => $hall,
+            'hall' => Hall::whereId($hallId)->first(),
             'matsubiArray' => $matstubiArray,
             'matsubiTotals' => $matsubiTotals,
             'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
