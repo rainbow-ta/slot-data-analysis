@@ -70,27 +70,29 @@ class HallDataController extends Controller
 
     public function detail(Request $request)
     {
+        // requestを変数に格納
         $hallId = $request->hall;
-        $monthlyHallDataService = new MonthlyHallDataService($hallId, 3);
-        $slotMachineCountsByDate = $monthlyHallDataService->calculateSlotMachineCountsByDate(true);
-
         $startDate = $request->startDate ?? now()->subDays(14)->startOfDay()->toDateString();
         $endDate = $request->endDate ?? now()->endOfDay()->toDateString();
         $selectedDates = $request->selectedDates;
         $slotMachineName = $request->slotMachineName;
 
+        // 月単位の機種データを取得
+        $monthlyHallDataService = new MonthlyHallDataService($hallId, 3);
+        $slotMachineCountsByDate = $monthlyHallDataService->calculateSlotMachineCountsByDate(true);
+
+        // ホールデータを取得
         $hallDataService = new HallDataService();
         $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName);
 
         $matstubiArray = $hallDataService->matsubiCount($hallData);
-        $matsubiTotals = $hallDataService->matsubiTotals($matstubiArray);
 
         $allDateData = $hallDataService->getAllDateData($hallData);
 
         return Inertia::render('HallData/Detail', [
             'hall' => Hall::whereId($hallId)->first(),
-            'matsubiArray' => $matstubiArray,
-            'matsubiTotals' => $matsubiTotals,
+            'matsubiArray' => $hallDataService->matsubiCount($hallData),
+            'matsubiTotals' => $hallDataService->matsubiTotals($matstubiArray),
             'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
             'allDate' => $hallData->unique('date')->pluck('date'),
             'selectedAllDates' => HallData::whereHallId($hallId)->distinct('date')->orderBy('date', 'desc')->pluck('date'),
