@@ -26,7 +26,7 @@ ChartJS.register(
 
 const props = defineProps({
   hall: {
-    type: String,
+    type: Object,
     required: true,
   },
   slotMachineCountsByDate: {
@@ -46,6 +46,10 @@ const props = defineProps({
     required: true,
   },
   allDate: {
+    type: Object,
+    required: true,
+  },
+  selectedAllDates: {
     type: Object,
     required: true,
   },
@@ -73,12 +77,17 @@ const props = defineProps({
     type: [Date, String],
     required: true,
   },
+  selectedDates: {
+    type: Object,
+    required: true,
+  },
 });
 
 const form = reactive({
   slotMachineName: props.slotMachineName,
   startDate: props.startDate,
   endDate: props.endDate,
+  selectedDates: props.selectedDates,
 });
 
 const fetchData = () => {
@@ -165,6 +174,10 @@ th.sticky {
         <h1 class="text-3xl font-bold">{{ hall.name }}&nbsp;データ詳細</h1>
       </div>
 
+      <div class="my-8">
+        <h2 class="text-2xl font-bold">データ絞り込み</h2>
+      </div>
+
       <form @submit.prevent="fetchData" class="bg-gray-200 shadow-md rounded px-4 py-6 mb-4 max-w-lg">
         <div class="mb-5">
           <label for="slot-machine-name" class="block text-gray-700 text-sm font-bold mb-2">機種名</label>
@@ -172,11 +185,28 @@ th.sticky {
         </div>
         <div class="mb-5">
           <label for="start-date" class="block text-gray-700 text-sm font-bold mb-2">開始日</label>
-          <input type="date" id="start-date" v-model="form.startDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+          <input type="date" id="start-date" v-model="form.startDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
         </div>
         <div class="mb-5">
           <label for="end-date" class="block text-gray-700 text-sm font-bold mb-2">終了日</label>
-          <input type="date" id="end-date" v-model="form.endDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+          <input type="date" id="end-date" v-model="form.endDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+        </div>
+        <div class="mb-5">
+          <label for="selected-dates" class="block text-gray-700 text-sm font-bold mb-2">特定日</label>
+          <select
+            v-model="form.selectedDates"
+            multiple
+            id="selected-dates"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-64"
+          >
+            <option
+              v-for="date in selectedAllDates"
+              :value="date"
+              :key="date"
+            >
+              {{ date }}
+            </option>
+          </select>
         </div>
         <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">絞り込み</button>
       </form>

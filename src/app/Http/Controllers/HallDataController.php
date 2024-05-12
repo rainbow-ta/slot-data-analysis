@@ -11,6 +11,7 @@ use App\UseCases\HallData\UpdateAction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Hall;
+use App\Models\HallData;
 use App\Services\HallDataService;
 use App\Services\EventHallDataService;
 use App\Services\MonthlyHallDataService;
@@ -75,10 +76,11 @@ class HallDataController extends Controller
 
         $startDate = $request->startDate ?? now()->subDays(14)->startOfDay()->toDateString();
         $endDate = $request->endDate ?? now()->endOfDay()->toDateString();
+        $selectedDates = $request->selectedDates;
         $slotMachineName = $request->slotMachineName;
 
         $hallDataService = new HallDataService();
-        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $slotMachineName);
+        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName);
 
         $matstubiArray = $hallDataService->matsubiCount($hallData);
         $matsubiTotals = $hallDataService->matsubiTotals($matstubiArray);
@@ -91,11 +93,13 @@ class HallDataController extends Controller
             'matsubiTotals' => $matsubiTotals,
             'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
             'allDate' => $hallData->unique('date')->pluck('date'),
+            'selectedAllDates' => HallData::whereHallId($hallId)->distinct('date')->orderBy('date', 'desc')->pluck('date'),
             'machineWinRates' => $hallDataService->getMachineWinRates($hallData),
             'allDateData' => $allDateData,
             'slumpSlotNumbers' => $hallDataService->calculateSlumpSlotNumbers($allDateData),
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'selectedDates' => $selectedDates,
             'slotMachineName' => $slotMachineName,
             'slotMachineCountsByDate' => $slotMachineCountsByDate,
         ]);
