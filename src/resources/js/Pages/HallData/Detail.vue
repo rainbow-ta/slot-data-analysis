@@ -349,6 +349,21 @@ th.sticky {
       </div>
 
       <div class="my-8">
+        <h2 class="text-2xl font-bold">台番号ごとのスランプグラフ</h2>
+      </div>
+
+      <div
+        v-for="(data, slotNumber) in slumpSlotNumbers"
+        class="mb-8"
+      >
+        <h3 class="text-xl font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
+
+        <div style="height:300px;">
+          <Line :data=generateData(data) :options=generateOptions(data) />
+        </div>
+      </div>
+
+      <div class="my-8">
         <h2 class="text-2xl font-bold">月単位の機種データ</h2>
       </div>
 
@@ -397,21 +412,6 @@ th.sticky {
               </tr>
             </tbody>
           </table>
-        </div>
-      </div>
-
-      <div class="my-8">
-        <h2 class="text-2xl font-bold">台番号ごとのスランプグラフ</h2>
-      </div>
-
-      <div
-        v-for="(data, slotNumber) in slumpSlotNumbers"
-        class="mb-8"
-      >
-        <h3 class="text-xl font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
-
-        <div style="height:300px;">
-          <Line :data=generateData(data) :options=generateOptions(data) />
         </div>
       </div>
     </template>
