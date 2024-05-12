@@ -75,9 +75,10 @@ class HallDataController extends Controller
 
         $startDate = $request->startDate ?? now()->subDays(14)->startOfDay()->toDateString();
         $endDate = $request->endDate ?? now()->endOfDay()->toDateString();
+        $slotMachineName = $request->slotMachineName;
 
         $hallDataService = new HallDataService();
-        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate);
+        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $slotMachineName);
 
         $matstubiArray = $hallDataService->matsubiCount($hallData);
         $matsubiTotals = $hallDataService->matsubiTotals($matstubiArray);
@@ -95,6 +96,7 @@ class HallDataController extends Controller
             'slumpSlotNumbers' => $hallDataService->calculateSlumpSlotNumbers($allDateData),
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'slotMachineName' => $slotMachineName,
             'slotMachineCountsByDate' => $slotMachineCountsByDate,
         ]);
     }

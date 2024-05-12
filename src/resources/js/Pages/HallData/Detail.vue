@@ -61,6 +61,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  slotMachineName: {
+    type: String,
+    required: true,
+  },
   startDate: {
     type: [Date, String],
     required: true,
@@ -72,6 +76,7 @@ const props = defineProps({
 });
 
 const form = reactive({
+  slotMachineName: props.slotMachineName,
   startDate: props.startDate,
   endDate: props.endDate,
 });
@@ -160,18 +165,20 @@ th.sticky {
         <h1 class="text-3xl font-bold">{{ hall.name }}&nbsp;データ詳細</h1>
       </div>
 
-      <form @submit.prevent="fetchData" class="bg-gray-200 shadow-md rounded px-4 pt-6 mb-4 max-w-lg flex flex-wrap items-center">
-        <div class="w-full md:w-1/3 mb-6">
-          <label for="startDate" class="block text-gray-700 text-sm font-bold mb-2">開始日:</label>
-          <input type="date" id="startDate" v-model="form.startDate" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      <form @submit.prevent="fetchData" class="bg-gray-200 shadow-md rounded px-4 py-6 mb-4 max-w-lg">
+        <div class="mb-5">
+          <label for="slot-machine-name" class="block text-gray-700 text-sm font-bold mb-2">機種名</label>
+          <input id="slot-machine-name" v-model="form.slotMachineName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="機種名を入力してください" />
         </div>
-        <div class="w-full md:w-1/3 mb-6 md:pl-2">
-          <label for="endDate" class="block text-gray-700 text-sm font-bold mb-2">終了日:</label>
-          <input type="date" id="endDate" v-model="form.endDate" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        <div class="mb-5">
+          <label for="start-date" class="block text-gray-700 text-sm font-bold mb-2">開始日</label>
+          <input type="date" id="start-date" v-model="form.startDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
         </div>
-        <div class="w-full md:w-1/3 md:pl-6">
-          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded focus:outline-none focus:shadow-outline cursor-pointer">絞り込み</button>
+        <div class="mb-5">
+          <label for="end-date" class="block text-gray-700 text-sm font-bold mb-2">終了日</label>
+          <input type="date" id="end-date" v-model="form.endDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
         </div>
+        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">絞り込み</button>
       </form>
 
       <div class="my-8">
