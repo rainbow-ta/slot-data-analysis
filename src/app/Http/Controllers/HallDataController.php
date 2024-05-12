@@ -74,8 +74,9 @@ class HallDataController extends Controller
         $hallId = $request->hall;
         $startDate = $request->startDate ?? now()->subDays(14)->startOfDay()->toDateString();
         $endDate = $request->endDate ?? now()->endOfDay()->toDateString();
-        $selectedDates = $request->selectedDates;
-        $slotMachineName = $request->slotMachineName;
+        $selectedDates = $request->selectedDates ?? [];
+        $slotMachineName = $request->slotMachineName ?? '';
+        $dataType = $request->dataType ?? 'all';
 
         // 月単位の機種データを取得
         $monthlyHallDataService = new MonthlyHallDataService($hallId, 3);
@@ -83,7 +84,7 @@ class HallDataController extends Controller
 
         // ホールデータを取得
         $hallDataService = new HallDataService();
-        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName);
+        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName, $dataType);
 
         $matstubiArray = $hallDataService->matsubiCount($hallData);
 
@@ -103,6 +104,7 @@ class HallDataController extends Controller
             'endDate' => $endDate,
             'selectedDates' => $selectedDates,
             'slotMachineName' => $slotMachineName,
+            'dataType' => $dataType,
             'slotMachineCountsByDate' => $slotMachineCountsByDate,
         ]);
     }

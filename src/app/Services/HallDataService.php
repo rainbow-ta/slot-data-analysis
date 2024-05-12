@@ -8,7 +8,7 @@ class HallDataService
     // TODO:Enumなどで管理する
     CONST COINS_PER_SPIN = 3;
 
-    public function fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName) {
+    public function fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName, $dataType) {
         return HallData::where('hall_id', $hallId)
             ->with('slotMachine')
             ->when($slotMachineName, function ($query) use ($slotMachineName) {
@@ -16,9 +16,19 @@ class HallDataService
                     $subQuery->where('name', 'LIKE', "%$slotMachineName%");
                 });
             })
-            ->when(!empty($selectedDates), function ($query) use ($selectedDates) {
+            ->when($dataType === 'event', function ($query) use($hallId) {
+                return $query->whereIn('date', function ($query) use ($hallId) {
+                    $query->select('date')
+                        ->from('hall_data')
+                        ->where('hall_id', $hallId)
+                        ->whereIsHighSetting(1)
+                        ->groupBy('date');
+                });
+            })
+            ->when($dataType === 'all' && !empty($selectedDates), function ($query) use ($selectedDates) {
                 return $query->whereIn('date', $selectedDates);
-            }, function ($query) use ($startDate, $endDate) {
+            })
+            ->when($dataType === 'all' && empty($selectedDates), function ($query) use ($startDate, $endDate) {
                 return $query->whereBetween('date', [$startDate, $endDate]);
             })
             ->orderBy('date', 'desc')

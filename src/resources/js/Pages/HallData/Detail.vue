@@ -81,6 +81,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  dataType: {
+    type: String,
+    required: true,
+  },
 });
 
 const form = reactive({
@@ -88,6 +92,7 @@ const form = reactive({
   startDate: props.startDate,
   endDate: props.endDate,
   selectedDates: props.selectedDates,
+  dataType: props.dataType,
 });
 
 const fetchData = () => {
@@ -180,33 +185,60 @@ th.sticky {
 
       <form @submit.prevent="fetchData" class="bg-gray-200 shadow-md rounded px-4 py-6 mb-4 max-w-lg">
         <div class="mb-5">
+          <label for="slot-machine-name" class="block text-gray-700 text-sm font-bold mb-2">データ種別</label>
+          <div class="flex">
+            <div class="flex items-center me-4">
+              <input
+                v-model="form.dataType"
+                id="data-type-all"
+                type="radio"
+                value="all"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+              >
+              <label for="data-type-all" class="ms-2 text-sm font-medium text-gray-900">全て</label>
+            </div>
+            <div class="flex items-center me-4">
+              <input
+                v-model="form.dataType"
+                id="data-type-event"
+                type="radio"
+                value="event"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+              >
+              <label for="data-type-event" class="ms-2 text-sm font-medium text-gray-900">イベント日</label>
+            </div>
+          </div>
+        </div>
+        <div class="mb-5">
           <label for="slot-machine-name" class="block text-gray-700 text-sm font-bold mb-2">機種名</label>
           <input id="slot-machine-name" v-model="form.slotMachineName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="機種名を入力してください" />
         </div>
-        <div class="mb-5">
-          <label for="start-date" class="block text-gray-700 text-sm font-bold mb-2">開始日</label>
-          <input type="date" id="start-date" v-model="form.startDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-        </div>
-        <div class="mb-5">
-          <label for="end-date" class="block text-gray-700 text-sm font-bold mb-2">終了日</label>
-          <input type="date" id="end-date" v-model="form.endDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-        </div>
-        <div class="mb-5">
-          <label for="selected-dates" class="block text-gray-700 text-sm font-bold mb-2">特定日</label>
-          <select
-            v-model="form.selectedDates"
-            multiple
-            id="selected-dates"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-64"
-          >
-            <option
-              v-for="date in selectedAllDates"
-              :value="date"
-              :key="date"
+        <div v-show="form.dataType === 'all'">
+          <div class="mb-5">
+            <label for="start-date" class="block text-gray-700 text-sm font-bold mb-2">開始日</label>
+            <input type="date" id="start-date" v-model="form.startDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+          </div>
+          <div class="mb-5">
+            <label for="end-date" class="block text-gray-700 text-sm font-bold mb-2">終了日</label>
+            <input type="date" id="end-date" v-model="form.endDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+          </div>
+          <div class="mb-5">
+            <label for="selected-dates" class="block text-gray-700 text-sm font-bold mb-2">特定日</label>
+            <select
+              v-model="form.selectedDates"
+              multiple
+              id="selected-dates"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 h-64"
             >
-              {{ date }}
-            </option>
-          </select>
+              <option
+                v-for="date in selectedAllDates"
+                :value="date"
+                :key="date"
+              >
+                {{ date }}
+              </option>
+            </select>
+          </div>
         </div>
         <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">絞り込み</button>
       </form>
