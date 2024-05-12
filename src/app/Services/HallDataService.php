@@ -8,7 +8,14 @@ class HallDataService
     // TODO:Enumなどで管理する
     CONST COINS_PER_SPIN = 3;
 
-    public function fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName, $dataType) {
+    private $dataType;
+
+    public function __construct($dataType = 'all')
+    {
+        $this->dataType = $dataType;
+    }
+
+    public function fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName) {
         return HallData::where('hall_id', $hallId)
             ->with('slotMachine')
             ->when($slotMachineName, function ($query) use ($slotMachineName) {
@@ -16,7 +23,7 @@ class HallDataService
                     $subQuery->where('name', 'LIKE', "%$slotMachineName%");
                 });
             })
-            ->when($dataType === 'event', function ($query) use($hallId) {
+            ->when($this->dataType === 'event', function ($query) use($hallId) {
                 return $query->whereIn('date', function ($query) use ($hallId) {
                     $query->select('date')
                         ->from('hall_data')
@@ -25,10 +32,10 @@ class HallDataService
                         ->groupBy('date');
                 });
             })
-            ->when($dataType === 'all' && !empty($selectedDates), function ($query) use ($selectedDates) {
+            ->when($this->dataType === 'all' && !empty($selectedDates), function ($query) use ($selectedDates) {
                 return $query->whereIn('date', $selectedDates);
             })
-            ->when($dataType === 'all' && empty($selectedDates), function ($query) use ($startDate, $endDate) {
+            ->when($this->dataType === 'all' && empty($selectedDates), function ($query) use ($startDate, $endDate) {
                 return $query->whereBetween('date', [$startDate, $endDate]);
             })
             ->orderBy('date', 'desc')
@@ -78,22 +85,45 @@ class HallDataService
         return $matsubiTotals;
     }
 
-    public function highSettingNumbersCount($hallData)
+    /**
+     * ホールデータを基に高設定の台番号データを返却する
+     *
+     * @param \Illuminate\Support\Collection $hallData
+     *
+     * @return array
+     */
+    public function calculateHighSettingSlotNumbers($hallData)
     {
-        return $hallData->filter(function ($item) {
-                return $item->is_high_setting == 1 || $item->is_predicted_high_setting == 1;
-            })->groupBy('slot_number')
+        return $hallData->when($this->dataType === 'event', function ($query) {
+                return $query->filter(function ($item) {
+                    return $item->is_high_setting == 1;
+                });
+            }, function ($query) {
+                return $query->filter(function ($item) {
+                    return $item->is_high_setting == 1 || $item->is_predicted_high_setting == 1;
+                });
+            })
+            ->groupBy('slot_number')
             ->map(function ($group) {
-                $slotNumber = $group->first()['slot_number'];
                 $count = $group->count();
-                $slotMachineName = $group->first()->slotMachine->name;
-                
+                $sumGameCount = $group->sum('game_count');
+                $sumDifferenceCoins = $group->sum('difference_coins');
+    
+                $averageGameCount = 0;
+                $averageRtp = 0;
+                if ($sumGameCount) {
+                    $averageGameCount = floor($sumGameCount / $count);
+                    $averageRtp = number_format((($sumGameCount * self::COINS_PER_SPIN + $sumDifferenceCoins) / ($sumGameCount * self::COINS_PER_SPIN) * 100), 2);
+                }
+    
                 return [
-                    'slot_number' => $slotNumber,
+                    'slot_number' => $group->first()['slot_number'],
                     'count' => $count,
-                    'slot_machine_name' => $slotMachineName,
+                    'average_game_count' => $averageGameCount,
+                    'average_rtp' => $averageRtp,
+                    'slot_machine_name' => $group->first()->slotMachine->name,
                 ];
-            })->sortBy('slot_number')->sortByDesc('count')->values()->all();
+            })->sortBy('slot_number')->sortByDesc('average_rtp')->sortByDesc('count')->values()->all();
     }
 
     public function getMachineWinRates($hallData)

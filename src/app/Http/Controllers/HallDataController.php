@@ -83,8 +83,8 @@ class HallDataController extends Controller
         $slotMachineCountsByDate = $monthlyHallDataService->calculateSlotMachineCountsByDate(true);
 
         // ホールデータを取得
-        $hallDataService = new HallDataService();
-        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName, $dataType);
+        $hallDataService = new HallDataService($dataType);
+        $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName);
 
         $matstubiArray = $hallDataService->matsubiCount($hallData);
 
@@ -94,11 +94,12 @@ class HallDataController extends Controller
             'hall' => Hall::whereId($hallId)->first(),
             'matsubiArray' => $hallDataService->matsubiCount($hallData),
             'matsubiTotals' => $hallDataService->matsubiTotals($matstubiArray),
-            'highSettingNumbers' => $hallDataService->highSettingNumbersCount($hallData),
+            'highSettingSlotNumbers' => $hallDataService->calculateHighSettingSlotNumbers($hallData),
             'allDate' => $hallData->unique('date')->pluck('date'),
             'selectedAllDates' => HallData::whereHallId($hallId)->distinct('date')->orderBy('date', 'desc')->pluck('date'),
             'machineWinRates' => $hallDataService->getMachineWinRates($hallData),
             'allDateData' => $allDateData,
+            'uniqueDateCount' => $hallData->unique('date')->count(),
             'slumpSlotNumbers' => $hallDataService->calculateSlumpSlotNumbers($allDateData),
             'startDate' => $startDate,
             'endDate' => $endDate,

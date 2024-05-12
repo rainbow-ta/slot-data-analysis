@@ -41,7 +41,11 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  highSettingNumbers: {
+  uniqueDateCount: {
+    type: Number,
+    required: true,
+  },
+  highSettingSlotNumbers: {
     type: Object,
     required: true,
   },
@@ -126,6 +130,16 @@ const formatDifferenceCoins = (coins) => {
 const maxLength = 17;
 const truncateText = (text) => {
   return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+}
+
+const generateInjectionRateString = (count) => {
+  const injectionRate = calculateInjectionRate(count);
+
+  return `${injectionRate}%（${count}/${props.uniqueDateCount}回）`;
+};
+
+const calculateInjectionRate = (count) => {
+  return (count / props.uniqueDateCount * 100).toFixed(1);
 }
 
 const generateOptions = (data) => {
@@ -297,28 +311,47 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-2xl font-bold">台番号ごとのデータ</h2>
+        <h2 class="text-2xl font-bold">台番号ごとの高設定投入率</h2>
       </div>
 
       <div class="table-container inline-block">
-        <table class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead class="text-xs text-gray-700 uppercase">
+        <table
+          v-if="highSettingSlotNumbers.length > 0"
+          class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead class="text-xs text-gray-700 uppercase bg-gray-200">
             <tr>
               <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">投入回数</th>
               <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">投入率</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">平均G数</th>
+              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">平均機械割</th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="highSettingNumber in highSettingNumbers"
-              :key="highSettingNumber.slot_number"
+              v-for="slotNumber in highSettingSlotNumbers"
+              :key="slotNumber"
             >
-              <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_number }}</td>
-              <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.count }}</td>
-              <td class="border px-4 py-2 text-gray-700">{{ highSettingNumber.slot_machine_name }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.slot_number }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.slot_machine_name }}</td>
+              <td
+                :class="{
+                  'bg-green-100': calculateInjectionRate(slotNumber.count) >= 50 && calculateInjectionRate(slotNumber.count) <= 80,
+                  'bg-red-200': calculateInjectionRate(slotNumber.count) >= 80,
+                  'bg-gold': calculateInjectionRate(slotNumber.count) === 100,
+                }"
+                class="border px-4 py-2 text-gray-700"
+              >
+                {{ generateInjectionRateString(slotNumber.count) }}
+              </td>
+              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.average_game_count }}</td>
+              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.average_rtp }}%</td>
             </tr>
           </tbody>
+        </table>
+        <table v-else>
+          データがありません。
         </table>
       </div>
 
