@@ -85,6 +85,58 @@ class HallDataService
         return $matsubiTotals;
     }
 
+    public function calculateHighSettingMachines($hallData)
+    {
+        $highSettingMachines = [];
+
+        foreach ($hallData as $data) {
+            $date = $data['date'];
+            $machineName = $data['slotMachine']['name'];
+
+            if (!isset($highSettingMachines[$machineName][$date])) {
+                $highSettingMachines[$machineName][$date]['count'] = 0;
+                $highSettingMachines[$machineName][$date]['high_setting_count'] = 0;
+            }
+
+            $highSettingMachines[$machineName][$date]['count']++;
+            if ($this->dataType === 'event') {
+                if ($data['is_high_setting']) {
+                    $highSettingMachines[$machineName][$date]['high_setting_count']++;
+                }
+            } else {
+                if ($data['is_high_setting'] || $data['is_predicted_high_setting']) {
+                    $highSettingMachines[$machineName][$date]['high_setting_count']++;
+                }
+            }
+        }
+
+        foreach ($highSettingMachines as $machineName => &$gameData) {
+            $total = 0;
+
+            foreach ($gameData as $date => $data) {
+                if ($this->dataType === 'event') {
+                    if (isset($data['high_setting_count']) && $data['high_setting_count'] !== 0) {
+                        $total++;
+                    }
+                } else {
+                    if ((isset($data['high_setting_count']) && $data['high_setting_count'] !== 0) ||
+                        (isset($data['is_predicted_high_setting']) && $data['is_predicted_high_setting'] !== 0)
+                    ) {
+                        $total++;
+                    }
+                }
+            }
+
+            $gameData['total'] = $total;
+        }
+
+        uasort($highSettingMachines, function ($a, $b) {
+            return $b['total'] - $a['total'];
+        });
+
+        return $highSettingMachines;
+    }
+
     /**
      * ホールデータを基に高設定の台番号データを返却する
      *
@@ -124,47 +176,6 @@ class HallDataService
                     'slot_machine_name' => $group->first()->slotMachine->name,
                 ];
             })->sortBy('slot_number')->sortByDesc('average_rtp')->sortByDesc('count')->values()->all();
-    }
-
-    public function getMachineWinRates($hallData)
-    {
-        $machineWinRates = [];
-
-        foreach ($hallData as $data) {
-            $date = $data['date'];
-            $machineName = $data['slotMachine']['name'];
-
-            if (!isset($machineWinRates[$machineName][$date])) {
-                $machineWinRates[$machineName][$date]['count'] = 0;
-                $machineWinRates[$machineName][$date]['win_count'] = 0;
-                $machineWinRates[$machineName][$date]['game_count'] = 0;
-                $machineWinRates[$machineName][$date]['difference_coins'] = 0;
-            }
-
-            $machineWinRates[$machineName][$date]['count']++;
-            $machineWinRates[$machineName][$date]['game_count'] += $data['game_count'];
-            $machineWinRates[$machineName][$date]['difference_coins'] += $data['difference_coins'];
-
-            if ($data['difference_coins'] > 0) {
-                $machineWinRates[$machineName][$date]['win_count']++;
-            }
-        }
-
-        foreach ($machineWinRates as $machineName => $values) {
-            foreach ($values as $key => $value) {
-                if ($value['game_count'] > 0) {
-                    $machineWinRates[$machineName][$key]['average_game_count'] = floor($value['game_count'] / $value['count']);
-                    $machineWinRates[$machineName][$key]['average_difference_coins'] = floor($value['difference_coins'] / $value['count']);
-                    $machineWinRates[$machineName][$key]['average_kikaiwari'] = number_format((($value['game_count'] * self::COINS_PER_SPIN + $value['difference_coins']) / ($value['game_count'] * self::COINS_PER_SPIN) * 100), 2);
-                } else {
-                    $machineWinRates[$machineName][$key]['average_game_count'] = 0;
-                    $machineWinRates[$machineName][$key]['average_difference_coins'] = 0;
-                    $machineWinRates[$machineName][$key]['average_kikaiwari'] = 0;
-                }
-            }
-        }
-
-        return $machineWinRates;
     }
 
     public function getAllDateData($hallData)
