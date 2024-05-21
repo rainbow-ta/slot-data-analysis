@@ -22,5 +22,4 @@ Route::put('halls/{hall}', [HallController::class, 'update'])->name('halls.updat
 
 // ホールデータ
 Route::resource('halls.hall-data', HallDataController::class)->except(['show']);
-Route::get('halls/{hall}/hall-data/event', [HallDataController::class, 'event'])->name('halls.hall-data.event');
 Route::get('halls/{hall}/hall-data/detail', [HallDataController::class, 'detail'])->name('halls.hall-data.detail');

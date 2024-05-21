@@ -43,9 +43,6 @@ defineProps({
                         <Link :href="'/halls/' + hall.id + '/hall-data'">
                           <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">データ編集</span>
                         </Link>
-                        <Link :href="'/halls/' + hall.id + '/hall-data/event'">
-                          <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">イベント日</span>
-                        </Link>
                         <Link :href="'/halls/' + hall.id + '/hall-data/detail'">
                           <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">詳細</span>
                         </Link>
