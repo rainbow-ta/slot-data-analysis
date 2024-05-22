@@ -13,9 +13,7 @@ use Inertia\Inertia;
 use App\Models\Hall;
 use App\Models\HallData;
 use App\Services\HallDataService;
-use App\Services\EventHallDataService;
 use App\Services\MonthlyHallDataService;
-use App\Services\HighSettingService;
 use Carbon\Carbon;
 
 class HallDataController extends Controller
@@ -44,28 +42,6 @@ class HallDataController extends Controller
         } catch (\Exception $e) {
             return abort(500);
         }
-    }
-
-    public function event($hallId)
-    {
-        $hallDataService = new HallDataService();
-        $eventHallDataService = new EventHallDataService();
-        $highSettingService = new HighSettingService();
-
-        $hallData = $eventHallDataService->getDataWithEventDate($hallId);
-
-        $monthlyHallDataService = new MonthlyHallDataService($hallId, 12);
-        $slotMachineCountsByDate = $monthlyHallDataService->calculateSlotMachineCountsByDate();
-
-        return Inertia::render('HallData/Event', [
-            'hallName' => Hall::whereId($hallId)->pluck('name')->first(),
-            'allDate' => $hallData->unique('date')->pluck('date'),
-            'highSettingMachines' => $highSettingService->calculateHighSettingMachines($hallData),
-            'uniqueDateCount' => $hallData->unique('date')->count(),
-            'highSettingSlotNumbers' => $highSettingService->calculateHighSettingSlotNumbers($hallData),
-            'allDateData' => $hallDataService->getAllDateData($hallData),
-            'slotMachineCountsByDate' => $slotMachineCountsByDate,
-        ]);
     }
 
     public function detail(Request $request)
