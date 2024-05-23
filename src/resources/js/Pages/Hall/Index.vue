@@ -25,6 +25,7 @@ defineProps({
                 <thead class="border-b font-medium dark:border-neutral-500">
                   <tr>
                     <th scope="col" class="px-6 py-4">店名</th>
+                    <th scope="col" class="px-6 py-4">データ</th>
                     <th scope="col" class="px-6 py-4">外部URL</th>
                     <th scope="col" class="px-6 py-4">備考</th>
                     <th scope="col" class="px-6 py-4">更新日</th>
@@ -39,17 +40,19 @@ defineProps({
                       <Link :href="'/halls/' + hall.id + '/edit'">
                         {{ hall.name }}
                       </Link>
-                      <div class="py-2">
+                    </td>
+                    <td class="px-6 py-4 font-medium">
+                      <div class="flex whitespace-nowrap">
                         <Link :href="'/halls/' + hall.id + '/hall-data'">
-                          <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">データ編集</span>
+                          <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">編集</span>
                         </Link>
                         <Link :href="'/halls/' + hall.id + '/hall-data/detail'">
                           <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">詳細</span>
                         </Link>
                       </div>
                     </td>
-                    <td class="px-6 py-4 font-medium cursor-pointer">
-                      <div v-html="hall.external_url"></div>
+                    <td class="px-6 py-4 font-medium">
+                      <div v-html="hall.external_url" class="cursor-pointer"></div>
                     </td>
                     <td class="px-6 py-4 font-medium">
                       <div v-html="hall.note"></div>
