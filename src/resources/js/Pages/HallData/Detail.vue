@@ -91,6 +91,8 @@ const props = defineProps({
   },
 });
 
+const dataNotFoundMessage = '該当のデータは存在しません。';
+
 const form = reactive({
   slotMachineName: props.slotMachineName,
   startDate: props.startDate,
@@ -306,7 +308,7 @@ th.sticky {
           </tbody>
         </table>
         <table v-else>
-          データがありません。
+          {{ dataNotFoundMessage }}
         </table>
       </div>
 
@@ -351,7 +353,7 @@ th.sticky {
           </tbody>
         </table>
         <table v-else>
-          データがありません。
+          {{ dataNotFoundMessage }}
         </table>
       </div>
 
@@ -361,6 +363,7 @@ th.sticky {
 
       <div class="table-container">
         <table
+          v-if="Object.keys(highSettingMachines).length > 0"
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
         >
           <thead class="text-xs text-gray-700 uppercase">
@@ -402,6 +405,9 @@ th.sticky {
             </tr>
           </tbody>
         </table>
+        <table v-else>
+          {{ dataNotFoundMessage }}
+        </table>
       </div>
 
       <div class="my-8">
@@ -409,7 +415,10 @@ th.sticky {
       </div>
 
       <div class="table-container">
-        <table class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table
+          v-if="Object.keys(allDateData).length > 0"
+          class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
           <thead class="text-xs text-gray-700 uppercase">
             <tr>
               <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
@@ -444,74 +453,91 @@ th.sticky {
             </tr>
           </tbody>
         </table>
+        <table v-else>
+          {{ dataNotFoundMessage }}
+        </table>
       </div>
 
       <div class="my-8">
         <h2 class="text-2xl font-bold">台番号ごとのスランプグラフ</h2>
       </div>
 
-      <div
-        v-for="(data, slotNumber) in slumpSlotNumbers"
-        class="mb-8"
+      <template
+        v-if="Object.keys(slumpSlotNumbers).length > 0"
       >
-        <h3 class="text-xl font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
+        <div
+          v-for="(data, slotNumber) in slumpSlotNumbers"
+          class="mb-8"
+        >
+          <h3 class="text-xl font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
 
-        <div style="height:300px;">
-          <Line :data=generateData(data) :options=generateOptions(data) />
+          <div style="height:300px;">
+            <Line :data=generateData(data) :options=generateOptions(data) />
+          </div>
         </div>
-      </div>
+      </template>
+      <template v-else>
+        {{ dataNotFoundMessage }}
+      </template>
 
       <div class="my-8">
         <h2 class="text-2xl font-bold">月単位の機種データ</h2>
       </div>
 
-      <div
-        v-for="(counts, slotName) in slotMachineCountsByDate"
-        class="mb-8"
+      <template
+        v-if="Object.keys(slotMachineCountsByDate).length > 0"
       >
-        <h3 class="text-xl font-bold mb-8">{{ slotName }}</h3>
+        <div
+          v-for="(counts, slotName) in slotMachineCountsByDate"
+          class="mb-8"
+        >
+          <h3 class="text-xl font-bold mb-8">{{ slotName }}</h3>
 
-        <div class="table-container">
-          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase">
-              <tr>
-                <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
-                <th
-                  v-for="slotNumber in counts.slot_number"
-                  class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+          <div class="table-container">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase">
+                <tr>
+                  <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
+                  <th
+                    v-for="slotNumber in counts.slot_number"
+                    class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+                  >
+                    {{ slotNumber }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(count, ym) in counts"
                 >
-                  {{ slotNumber }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(count, ym) in counts"
-              >
-                <template v-if="ym == '合計'">
-                  <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ ym }}</th>
-                  <td
-                    v-for="slotNumber in counts.slot_number"
-                    :class="{'bg-red-200': count[slotNumber]['is_top5'] === true}"
-                    class="border px-4 py-2 text-gray-700"
-                  >
-                    {{ count[slotNumber]['count'] }}
-                  </td>
-                </template>
-                <template v-else-if="ym !== 'slot_number'">
-                  <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ ym }}</th>
-                  <td
-                    v-for="slotNumber in counts.slot_number"
-                    class="border px-4 py-2 text-gray-700"
-                  >
-                    {{ count[slotNumber] }}
-                  </td>
-                </template>
-              </tr>
-            </tbody>
-          </table>
+                  <template v-if="ym == '合計'">
+                    <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ ym }}</th>
+                    <td
+                      v-for="slotNumber in counts.slot_number"
+                      :class="{'bg-red-200': count[slotNumber]['is_top5'] === true}"
+                      class="border px-4 py-2 text-gray-700"
+                    >
+                      {{ count[slotNumber]['count'] }}
+                    </td>
+                  </template>
+                  <template v-else-if="ym !== 'slot_number'">
+                    <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ ym }}</th>
+                    <td
+                      v-for="slotNumber in counts.slot_number"
+                      class="border px-4 py-2 text-gray-700"
+                    >
+                      {{ count[slotNumber] }}
+                    </td>
+                  </template>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </template>
+      <template v-else>
+        {{ dataNotFoundMessage }}
+      </template>
     </template>
   </BaseLayout>
 </template>
