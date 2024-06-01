@@ -108,6 +108,12 @@ const fetchData = () => {
   });
 };
 
+const resetForm = () => {
+  router.visit('/halls/' + props.hall.id + '/hall-data/detail', {
+    method: 'get',
+  });
+};
+
 // TODO:他の画面でも使う処理を共通化する
 const matsubiNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -256,7 +262,17 @@ th.sticky {
             </select>
           </div>
         </div>
-        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">絞り込み</button>
+        <div class="flex">
+          <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center me-3">絞り込み</button>
+
+          <button
+            @click="resetForm"
+            type="button"
+            class="text-white bg-gray-600 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            リセット
+          </button>
+        </div>
       </form>
 
       <div class="my-8">
