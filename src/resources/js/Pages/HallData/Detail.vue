@@ -244,7 +244,7 @@ th.sticky {
         </div>
         <div class="mb-5">
           <label for="slot-machine-name" class="block text-gray-700 text-sm font-bold mb-2">機種名</label>
-          <input id="slot-machine-name" v-model="form.slotMachineName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="機種名を入力してください" />
+          <input id="slot-machine-name" v-model="form.slotMachineName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="カンマで区切ることで複数の機種を検索することが出来ます" />
         </div>
         <div v-show="form.dataType === 'all'">
           <div class="mb-5">
