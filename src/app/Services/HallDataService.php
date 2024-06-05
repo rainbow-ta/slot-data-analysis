@@ -15,12 +15,14 @@ class HallDataService
         $this->dataType = $dataType;
     }
 
-    public function fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineName) {
+    public function fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineNames) {
         return HallData::where('hall_id', $hallId)
             ->with('slotMachine')
-            ->when($slotMachineName, function ($query) use ($slotMachineName) {
-                return $query->whereHas('slotMachine', function ($subQuery) use ($slotMachineName) {
-                    $subQuery->where('name', 'LIKE', "%$slotMachineName%");
+            ->when(!empty($slotMachineNames), function ($query) use ($slotMachineNames) {
+                return $query->whereHas('slotMachine', function ($subQuery) use ($slotMachineNames) {
+                    foreach ($slotMachineNames as $slotMachineName) {
+                        $subQuery->orWhere('name', 'LIKE', "%$slotMachineName%");
+                    }
                 });
             })
             ->when($this->dataType === 'event', function ($query) use($hallId) {

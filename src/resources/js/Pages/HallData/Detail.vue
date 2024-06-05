@@ -99,12 +99,23 @@ const form = reactive({
   endDate: props.endDate,
   selectedDates: props.selectedDates,
   dataType: props.dataType,
+  get slotMachineNameArray() {
+    return this.slotMachineName.split(',').map(name => name.trim());
+  }
 });
 
 const fetchData = () => {
-  router.visit('/halls/' + props.hall.id + '/hall-data/detail', {
+  const params = {
+    startDate: form.startDate,
+    endDate: form.endDate,
+    selectedDates: form.selectedDates,
+    dataType: form.dataType,
+    slotMachineNameArray: form.slotMachineNameArray,
+  };
+
+  router.visit(`/halls/${props.hall.id}/hall-data/detail`, {
     method: 'get',
-    data: form,
+    data: params,
   });
 };
 
