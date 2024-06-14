@@ -20,8 +20,12 @@ class HallDataService
             ->with('slotMachine')
             ->when(!empty($slotMachineNames), function ($query) use ($slotMachineNames) {
                 return $query->whereHas('slotMachine', function ($subQuery) use ($slotMachineNames) {
-                    foreach ($slotMachineNames as $slotMachineName) {
-                        $subQuery->orWhere('name', 'LIKE', "%$slotMachineName%");
+                    foreach ($slotMachineNames as $index => $slotMachineName) {
+                        if ($index === 0) {
+                            $subQuery->where('name', 'LIKE', "%$slotMachineName%");
+                        } else {
+                            $subQuery->orWhere('name', 'LIKE', "%$slotMachineName%");
+                        }
                     }
                 });
             })
