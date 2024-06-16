@@ -80,7 +80,7 @@ class HallDataController extends Controller
             'startDate' => $startDate,
             'endDate' => $endDate,
             'selectedDates' => $selectedDates,
-            'slotMachineName' => implode($slotMachineNameArray),
+            'slotMachineName' => implode(',', $slotMachineNameArray),
             'dataType' => $dataType,
             'slotMachineCountsByDate' => $slotMachineCountsByDate,
         ]);
