@@ -42,9 +42,6 @@ class ScrapeAnaslot extends Command
      */
     public function handle()
     {
-        // TODO:envで設定する
-        date_default_timezone_set('Asia/Tokyo');
-
         $output = new ConsoleOutput();
         $halls = Hall::whereNotNull('ana_slot_url_name')
             ->where('is_scrape', 1)
