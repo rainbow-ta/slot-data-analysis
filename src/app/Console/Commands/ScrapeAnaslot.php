@@ -10,6 +10,7 @@ use App\Models\SlotMachine;
 use App\Services\HighSettingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -154,6 +155,7 @@ class ScrapeAnaslot extends Command
 
             // 店舗によってデータ構造が異なるため、要素数で判定して取得する
             $countRowData = count($rowData);
+            $currentTimestamp = Carbon::now();
             if ($countRowData === 9) {
                 $dataArray[] = [
                     'slot_machines_id' => $slotMachine->id,
@@ -168,6 +170,8 @@ class ScrapeAnaslot extends Command
                     'date' => $formattedDate,
                     'is_predicted_high_setting' => $isHighSetting,
                     'hall_id' => $hall->id,
+                    'created_at' => $currentTimestamp,
+                    'updated_at' => $currentTimestamp,
                 ];
             } else {
                 $dataArray[] = [
@@ -185,6 +189,8 @@ class ScrapeAnaslot extends Command
                     'date' => $formattedDate,
                     'is_predicted_high_setting' => $isHighSetting,
                     'hall_id' => $hall->id,
+                    'created_at' => $currentTimestamp,
+                    'updated_at' => $currentTimestamp,
                 ];
             }
         });
