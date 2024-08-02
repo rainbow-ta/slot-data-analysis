@@ -9,6 +9,7 @@ use App\Models\HallData;
 use App\Models\SlotMachine;
 use App\Services\HighSettingService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -122,6 +123,7 @@ class ScrapeAnaslot extends Command
                 if ($i < $retryCount - 1) {
                     sleep($sleepTime);
                 } else {
+                    Log::error($e->getMessage());
                     throw $e;
                 }
             }
@@ -202,6 +204,7 @@ class ScrapeAnaslot extends Command
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
+            Log::error($e->getMessage());
             $this->error('Error inserting data: ' . $e->getMessage());
         }
     }
