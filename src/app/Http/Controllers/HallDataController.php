@@ -48,7 +48,7 @@ class HallDataController extends Controller
     {
         // requestを変数に格納
         $hallId = $request->hall;
-        $startDate = $request->startDate ?? now()->subDays(14)->startOfDay()->toDateString();
+        $startDate = $request->startDate ?? now()->subDays(7)->startOfDay()->toDateString();
         $endDate = $request->endDate ?? now()->endOfDay()->toDateString();
         $selectedDates = $request->selectedDates ?? [];
         $slotMachineNameArray = $request->query('slotMachineNameArray', []);
