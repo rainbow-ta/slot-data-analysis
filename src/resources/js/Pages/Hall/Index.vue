@@ -37,7 +37,7 @@ defineProps({
                     :key="hall.id"
                     class="border-b dark:border-neutral-500"
                   >
-                    <td class="whitespace-nowrap px-2 sm:px-6 py-4 font-medium">
+                    <td class="whitespace-nowrap px-2 sm:px-6 py-4 font-medium text-blue-600 hover:underline">
                       <Link :href="'/halls/' + hall.id + '/edit'">
                         {{ hall.name }}
                       </Link>
