@@ -24,24 +24,25 @@ defineProps({
               <table class="min-w-full text-left text-sm font-light">
                 <thead class="border-b font-medium dark:border-neutral-500">
                   <tr>
-                    <th scope="col" class="px-6 py-4">店名</th>
-                    <th scope="col" class="px-6 py-4">データ</th>
-                    <th scope="col" class="px-6 py-4">外部URL</th>
-                    <th scope="col" class="px-6 py-4">備考</th>
-                    <th scope="col" class="px-6 py-4">更新日</th>
+                    <th scope="col" class="px-2 sm:px-6 py-4">店名</th>
+                    <th scope="col" class="px-2 sm:px-6 py-4">データ</th>
+                    <th scope="col" class="px-2 sm:px-6 py-4">外部URL</th>
+                    <th scope="col" class="hidden sm:table-cell px-2 sm:px-6 py-4">備考</th>
+                    <th scope="col" class="hidden sm:table-cell px-2 sm:px-6 py-4">更新日</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
                     v-for="hall in halls.data"
+                    :key="hall.id"
                     class="border-b dark:border-neutral-500"
                   >
-                    <td class="whitespace-nowrap px-6 py-4 font-medium">
+                    <td class="whitespace-nowrap px-2 sm:px-6 py-4 font-medium">
                       <Link :href="'/halls/' + hall.id + '/edit'">
                         {{ hall.name }}
                       </Link>
                     </td>
-                    <td class="px-6 py-4 font-medium">
+                    <td class="px-2 sm:px-6 py-4 font-medium">
                       <div class="flex whitespace-nowrap">
                         <Link :href="'/halls/' + hall.id + '/hall-data'">
                           <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">編集</span>
@@ -51,13 +52,13 @@ defineProps({
                         </Link>
                       </div>
                     </td>
-                    <td class="px-6 py-4 font-medium">
+                    <td class="px-2 sm:px-6 py-4 font-medium">
                       <div v-html="hall.external_url" class="cursor-pointer"></div>
                     </td>
-                    <td class="px-6 py-4 font-medium">
+                    <td class="hidden sm:table-cell px-2 sm:px-6 py-4 font-medium">
                       <div v-html="hall.note"></div>
                     </td>
-                    <td class="px-6 py-4 font-medium">
+                    <td class="hidden sm:table-cell px-2 sm:px-6 py-4 font-medium">
                       <div>{{ hall.updated_at }}</div>
                     </td>
                   </tr>
