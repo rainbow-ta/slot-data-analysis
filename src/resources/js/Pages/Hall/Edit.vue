@@ -28,7 +28,7 @@ const form = useForm({
   <base-layout>
     <template #main>
       <div class="my-8">
-        <h1 class="text-3xl font-bold">{{ hall.data.name }}&nbsp;ホール編集</h1>
+        <h1 class="text-xl sm:text-3xl font-bold">{{ hall.data.name }}&nbsp;ホール編集</h1>
       </div>
 
       <form @submit.prevent="form.put('/halls/' + hall.data.id)">

@@ -34,7 +34,7 @@ const update = (isHighSetting, id) => {
   <base-layout>
     <template #main>
       <div class="my-8">
-        <h1 class="text-3xl font-bold">{{ hallCollection.data.hall.name }}&nbsp;データ編集</h1>
+        <h1 class="text-xl sm:text-3xl font-bold">{{ hallCollection.data.hall.name }}&nbsp;データ編集</h1>
       </div>
 
       <input

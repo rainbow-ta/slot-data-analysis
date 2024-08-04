@@ -14,7 +14,7 @@ defineProps({
   <base-layout>
     <template #main>
       <div class="my-8">
-        <h1 class="text-3xl font-bold">ホール一覧</h1>
+        <h1 class="text-xl sm:text-3xl font-bold">ホール一覧</h1>
       </div>
 
       <div class="flex flex-col">
