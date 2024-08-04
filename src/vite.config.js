@@ -10,6 +10,7 @@ export default defineConfig({
         }),
         vue(),
     ],
+    build: { chunkSizeWarningLimit: 1600, },
     resolve: {
         alias: {
             'ziggy': '/vendor/tightenco/ziggy/src/js',
