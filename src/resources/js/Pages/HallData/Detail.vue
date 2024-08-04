@@ -208,12 +208,19 @@ th.sticky {
 <template>
   <BaseLayout>
     <template #main>
-      <div class="my-8">
-        <h1 class="text-3xl font-bold">{{ hall.name }}&nbsp;データ詳細</h1>
+      <div class="flex my-8">
+        <h1 class="text-xl sm:text-3xl font-bold me-3">{{ hall.name }}&nbsp;データ詳細</h1>
+        <a
+          :href="'/halls/' + hall.id + '/hall-data'"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 text-center"
+        >
+          編集
+        </a>
       </div>
 
+
       <div class="my-8">
-        <h2 class="text-2xl font-bold">データ絞り込み</h2>
+        <h2 class="text-l sm:text-lg sm:text-2xl font-bold">データ絞り込み</h2>
       </div>
 
       <form @submit.prevent="fetchData" class="bg-gray-200 shadow-md rounded px-4 py-6 mb-4 max-w-lg">
@@ -287,7 +294,7 @@ th.sticky {
       </form>
 
       <div class="my-8">
-        <h2 class="text-2xl font-bold">末尾ごとのデータ</h2>
+        <h2 class="text-lg sm:text-2xl font-bold">末尾ごとのデータ</h2>
       </div>
 
       <div class="table-container">
@@ -340,7 +347,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-2xl font-bold">台番号ごとの高設定投入率</h2>
+        <h2 class="text-lg sm:text-2xl font-bold">台番号ごとの高設定投入率</h2>
       </div>
 
       <div class="table-container inline-block">
@@ -385,7 +392,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-2xl font-bold">機種ごとの高設定投入率</h2>
+        <h2 class="text-lg sm:text-2xl font-bold">機種ごとの高設定投入率</h2>
       </div>
 
       <div class="table-container">
@@ -438,7 +445,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-2xl font-bold">日付ごとのデータ</h2>
+        <h2 class="text-lg sm:text-2xl font-bold">日付ごとのデータ</h2>
       </div>
 
       <div class="table-container">
@@ -486,7 +493,7 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-2xl font-bold">台番号ごとのスランプグラフ</h2>
+        <h2 class="text-lg sm:text-2xl font-bold">台番号ごとのスランプグラフ</h2>
       </div>
 
       <template
@@ -508,7 +515,7 @@ th.sticky {
       </template>
 
       <div class="my-8">
-        <h2 class="text-2xl font-bold">月単位の機種データ</h2>
+        <h2 class="text-lg sm:text-2xl font-bold">月単位の機種データ</h2>
       </div>
 
       <template
@@ -518,7 +525,7 @@ th.sticky {
           v-for="(counts, slotName) in slotMachineCountsByDate"
           class="mb-8"
         >
-          <h3 class="text-xl font-bold mb-8">{{ slotName }}</h3>
+          <h3 class="text-base mb-4 sm:text-xl sm:mb-6 font-bold">{{ slotName }}</h3>
 
           <div class="table-container">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

@@ -25,7 +25,6 @@ defineProps({
                 <thead class="border-b font-medium dark:border-neutral-500">
                   <tr>
                     <th scope="col" class="px-2 sm:px-6 py-4">店名</th>
-                    <th scope="col" class="px-2 sm:px-6 py-4">データ</th>
                     <th scope="col" class="px-2 sm:px-6 py-4">外部URL</th>
                     <th scope="col" class="hidden sm:table-cell px-2 sm:px-6 py-4">備考</th>
                     <th scope="col" class="hidden sm:table-cell px-2 sm:px-6 py-4">更新日</th>
@@ -37,18 +36,13 @@ defineProps({
                     :key="hall.id"
                     class="border-b dark:border-neutral-500"
                   >
-                    <td class="whitespace-nowrap px-2 sm:px-6 py-4 font-medium text-blue-600 hover:underline">
-                      <Link :href="'/halls/' + hall.id + '/edit'">
-                        {{ hall.name }}
-                      </Link>
-                    </td>
-                    <td class="px-2 sm:px-6 py-4 font-medium">
-                      <div class="flex whitespace-nowrap">
-                        <Link :href="'/halls/' + hall.id + '/hall-data'">
-                          <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">編集</span>
+                    <td class="whitespace-nowrap px-2 sm:px-6 py-4 font-medium">
+                      <div class="grid justify-items-start">
+                        <Link :href="'/halls/' + hall.id + '/hall-data/detail'" class="text-blue-600 hover:underline mb-2">
+                          {{ hall.name }}
                         </Link>
-                        <Link :href="'/halls/' + hall.id + '/hall-data/detail'">
-                          <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">詳細</span>
+                        <Link :href="'/halls/' + hall.id + '/edit'" class="col-start-1 col-end-3 bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                          編集
                         </Link>
                       </div>
                     </td>
