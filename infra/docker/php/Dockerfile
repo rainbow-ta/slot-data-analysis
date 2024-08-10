@@ -23,7 +23,10 @@ RUN <<EOF
     libzip-dev \
     libicu-dev \
     libonig-dev \
-    curl
+    curl \
+    zlib1g-dev libpng-dev libjpeg-dev libfreetype6-dev libwebp-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install gd
   locale-gen en_US.UTF-8
   localedef -f UTF-8 -i en_US en_US.UTF-8
   docker-php-ext-install \

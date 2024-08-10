@@ -12,8 +12,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Hall;
 use App\Models\HallData;
+use App\Services\FloorMapService;
 use App\Services\HallDataService;
-use App\Services\MonthlyHallDataService;
 use Carbon\Carbon;
 
 class HallDataController extends Controller
@@ -58,15 +58,28 @@ class HallDataController extends Controller
         $hallDataService = new HallDataService($dataType);
         $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineNameArray);
 
+        // フロアマップの生成
+        $floorMapUrl = '';
+        if ($hallId == 1) {
+            $floorMapData = $hallDataService->calculateFloorMapData($hallData);
+            $floorMapService = new FloorMapService($floorMapData);
+            $floorMapUrl = $floorMapService->generateFloorMap();
+        }
+
+        // 高設定データを台番号ごとに集計
+        $highSettingSlotNumbers = $hallDataService->calculateHighSettingSlotNumbers($hallData);
+
+        // 高設定データを台番号末尾ごとに集計
         $matstubiArray = $hallDataService->matsubiCount($hallData);
 
+        // 全てのデータを取得
         $allDateData = $hallDataService->getAllDateData($hallData);
 
         return Inertia::render('HallData/Detail', [
             'hall' => Hall::whereId($hallId)->first(),
             'matsubiArray' => $hallDataService->matsubiCount($hallData),
             'matsubiTotals' => $hallDataService->matsubiTotals($matstubiArray),
-            'highSettingSlotNumbers' => $hallDataService->calculateHighSettingSlotNumbers($hallData),
+            'highSettingSlotNumbers' => $highSettingSlotNumbers,
             'highSettingMachines' => $hallDataService->calculateHighSettingMachines($hallData),
             'allDate' => $hallData->unique('date')->pluck('date'),
             'selectedAllDates' => HallData::whereHallId($hallId)->distinct('date')->orderBy('date', 'desc')->pluck('date'),
@@ -78,6 +91,7 @@ class HallDataController extends Controller
             'selectedDates' => $selectedDates,
             'slotMachineName' => implode(',', $slotMachineNameArray),
             'dataType' => $dataType,
+            'floorMapUrl' => $floorMapUrl,
         ]);
     }
 }

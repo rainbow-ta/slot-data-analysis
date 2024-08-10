@@ -85,6 +85,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  floorMapUrl: {
+    type: String,
+    required: true,
+  },
 });
 
 const dataNotFoundMessage = '該当のデータは存在しません。';
@@ -214,6 +218,7 @@ th.sticky {
         </a>
       </div>
 
+      <img v-if="floorMapUrl" :src=floorMapUrl alt="Seating Chart">
 
       <div class="my-8">
         <h2 class="text-l sm:text-lg sm:text-2xl font-bold">データ絞り込み</h2>

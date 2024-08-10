@@ -5,8 +5,8 @@ namespace App\Services;
 class HighSettingService
 {
     CONST COINS_PER_SPIN = 3;
-    CONST HIGH_SETTING_RTP = 108;
-    CONST REQUIRED_GAME_COUNT = 4000;
+    CONST HIGH_SETTING_RTP = 106;
+    CONST REQUIRED_GAME_COUNT = 3000;
 
     public function isHighSetting($gameCount, $differenceCoins)
     {
@@ -37,5 +37,10 @@ class HighSettingService
     public function calculateExpectedCoins($rtp, $gameCount)
     {
         return ($gameCount * self::COINS_PER_SPIN * $rtp / 100) - ($gameCount * self::COINS_PER_SPIN);
+    }
+
+    public function calculatePercentage($part, $total)
+    {
+        return round(($part / $total) * 100, 2);
     }
 }

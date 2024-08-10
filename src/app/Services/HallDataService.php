@@ -2,6 +2,7 @@
 
 namespace App\Services;
 use App\Models\HallData;
+use App\Services\HighSettingService;
 
 class HallDataService
 {
@@ -182,6 +183,51 @@ class HallDataService
                     'slot_machine_name' => $group->first()->slotMachine->name,
                 ];
             })->sortBy('slot_number')->sortByDesc('average_rtp')->sortByDesc('count')->values()->all();
+    }
+
+    /**
+     * ホールデータを基にフロアマップ出力用のデータを生成する
+     *
+     * @param \Illuminate\Support\Collection $hallData
+     *
+     * @return array
+     */
+    public function calculateFloorMapData($hallData)
+    {
+        $highSettingService = new HighSettingService();
+
+        return $hallData->groupBy('slot_number')
+            ->map(function ($group) use ($highSettingService) {
+                // 高設定の投入率を算出
+                $count = $group->count();
+                $highSettingCount = 0;
+                foreach ($group as $g) {
+                    if ($highSettingService->isHighSetting($g['game_count'], $g['difference_coins'])) {
+                        $highSettingCount++;
+                    }
+                }
+                $highSettingPercentage = $highSettingService->calculatePercentage($highSettingCount, $count);
+
+                $sumGameCount = $group->sum('game_count');
+                $sumDifferenceCoins = $group->sum('difference_coins');
+
+                $averageGameCount = 0;
+                $averageRtp = 0;
+                if ($sumGameCount) {
+                    $averageGameCount = floor($sumGameCount / $count);
+                    $averageRtp = number_format((($sumGameCount * self::COINS_PER_SPIN + $sumDifferenceCoins) / ($sumGameCount * self::COINS_PER_SPIN) * 100), 2);
+                }
+    
+                return [
+                    'slot_number' => $group->first()['slot_number'],
+                    'slot_machine_name' => $group->first()->slotMachine->name,
+                    'count' => $count,
+                    'highSettingCount' => $highSettingCount,
+                    'highSettingPercentage' => $highSettingPercentage,
+                    'average_game_count' => $averageGameCount,
+                    'average_rtp' => $averageRtp,
+                ];
+            })->sortBy('slot_number')->values()->all();
     }
 
     public function getAllDateData($hallData)
