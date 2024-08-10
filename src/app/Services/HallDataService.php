@@ -202,8 +202,12 @@ class HallDataService
                 $count = $group->count();
                 $highSettingCount = 0;
                 foreach ($group as $g) {
-                    if ($highSettingService->isHighSetting($g['game_count'], $g['difference_coins'])) {
-                        $highSettingCount++;
+                    if ($this->dataType === 'event') {
+                        if ($g['is_high_setting'] == 1) $highSettingCount++;
+                    } else {
+                        if ($highSettingService->isHighSetting($g['game_count'], $g['difference_coins'])) {
+                            $highSettingCount++;
+                        }
                     }
                 }
                 $highSettingPercentage = $highSettingService->calculatePercentage($highSettingCount, $count);
