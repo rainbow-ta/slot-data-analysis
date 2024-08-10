@@ -54,10 +54,6 @@ class HallDataController extends Controller
         $slotMachineNameArray = $request->query('slotMachineNameArray', []);
         $dataType = $request->dataType ?? 'all';
 
-        // 月単位の機種データを取得
-        $monthlyHallDataService = new MonthlyHallDataService($hallId, 3);
-        $slotMachineCountsByDate = $monthlyHallDataService->calculateSlotMachineCountsByDate(true);
-
         // ホールデータを取得
         $hallDataService = new HallDataService($dataType);
         $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineNameArray);
@@ -82,7 +78,6 @@ class HallDataController extends Controller
             'selectedDates' => $selectedDates,
             'slotMachineName' => implode(',', $slotMachineNameArray),
             'dataType' => $dataType,
-            'slotMachineCountsByDate' => $slotMachineCountsByDate,
         ]);
     }
 }
