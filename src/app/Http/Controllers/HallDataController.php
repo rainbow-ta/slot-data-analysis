@@ -59,11 +59,13 @@ class HallDataController extends Controller
         $hallData = $hallDataService->fetchHallData($hallId, $startDate, $endDate, $selectedDates, $slotMachineNameArray);
 
         // フロアマップの生成
-        $floorMapUrl = '';
+        $hall = Hall::whereId($hallId)->first();
+        $floorMapImagePath = '';
         if ($hallId == 1) {
             $floorMapData = $hallDataService->calculateFloorMapData($hallData);
             $floorMapService = new FloorMapService($floorMapData);
-            $floorMapUrl = $floorMapService->generateFloorMap();
+            $searchQuery = $hall->name . $startDate . $endDate . implode($selectedDates) . implode($slotMachineNameArray) . $dataType;
+            $floorMapImagePath = $floorMapService->generateFloorMap($searchQuery);
         }
 
         // 高設定データを台番号ごとに集計
@@ -76,7 +78,7 @@ class HallDataController extends Controller
         $allDateData = $hallDataService->getAllDateData($hallData);
 
         return Inertia::render('HallData/Detail', [
-            'hall' => Hall::whereId($hallId)->first(),
+            'hall' => $hall,
             'matsubiArray' => $hallDataService->matsubiCount($hallData),
             'matsubiTotals' => $hallDataService->matsubiTotals($matstubiArray),
             'highSettingSlotNumbers' => $highSettingSlotNumbers,
@@ -91,7 +93,7 @@ class HallDataController extends Controller
             'selectedDates' => $selectedDates,
             'slotMachineName' => implode(',', $slotMachineNameArray),
             'dataType' => $dataType,
-            'floorMapUrl' => $floorMapUrl,
+            'floorMapImagePath' => $floorMapImagePath,
         ]);
     }
 }

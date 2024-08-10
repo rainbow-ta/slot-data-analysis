@@ -85,7 +85,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  floorMapUrl: {
+  floorMapImagePath: {
     type: String,
     required: true,
   },
@@ -296,7 +296,7 @@ th.sticky {
         <h2 class="text-l sm:text-lg sm:text-2xl font-bold">フロアマップ</h2>
       </div>
 
-      <img v-if="floorMapUrl" :src=floorMapUrl alt="Seating Chart">
+      <img v-if="floorMapImagePath" :src=floorMapImagePath alt="Seating Chart">
 
       <div class="my-8">
         <h2 class="text-lg sm:text-2xl font-bold">末尾ごとのデータ</h2>

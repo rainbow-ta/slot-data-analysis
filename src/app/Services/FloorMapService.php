@@ -26,8 +26,15 @@ class FloorMapService
         $this->floorMapData = $floorMapData;
     }
 
-    public function generateFloorMap()
+    public function generateFloorMap($searchQuery)
     {
+        $fullImagePath = public_path("/images/floor_map/$searchQuery.png");
+        $relativeImagePath = "/images/floor_map/$searchQuery.png";
+
+        if (file_exists($fullImagePath)) {
+            return $relativeImagePath;
+        }
+
         $manager = new ImageManager(new Driver());
         $image = $manager->create(self::IMAGE_WIDTH, self::IMAGE_HEIGHT)->fill(self::BG_COLOR);
 
@@ -51,10 +58,9 @@ class FloorMapService
             $this->drawText($image, $text, $coordinate['x'], $coordinate['y']);
         }
 
-        $imagePath = public_path('/images/floor_map/floor_map.png');
-        $image->save($imagePath);
+        $image->save($fullImagePath);
 
-        return '/images/floor_map/floor_map.png';
+        return $relativeImagePath;
     }
 
     private function generateText($data)
@@ -156,11 +162,11 @@ class FloorMapService
     private function generateColor($percentage)
     {
         if ($percentage >= 75) {
-            return 'red';
+            return '#FF5192';
         } elseif ($percentage >= 50) {
-            return 'green';
+            return '#98FB98';
         } elseif ($percentage >= 25) {
-            return 'blue';
+            return '#75A9FF';
         } else {
             return '';
         }
