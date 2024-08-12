@@ -28,7 +28,7 @@ class ScrapeAnaslot extends Command
      *
      * @var string
      */
-    protected $description = 'Scrapes Ana Slot data for the past 3 months';
+    protected $description = 'Scrapes Ana Slot data';
 
     private $highSettingService;
 
@@ -55,15 +55,15 @@ class ScrapeAnaslot extends Command
         }
 
         $today = now();
-        $threeMonthsAgo = now()->subMonths(3);
-        $currentDate = clone $threeMonthsAgo;
+        $monthsAgo = now()->subMonths(1);
+        $currentDate = clone $monthsAgo;
 
         // プログレスバー開始
-        $totalDays = $threeMonthsAgo->diff($today)->days;
+        $totalDays = $monthsAgo->diff($today)->days;
         $progressBar = new ProgressBar($output, $totalDays * count($halls));
         $progressBar->start();
 
-        // 直近3ヶ月のデータを取得する
+        // データ取得処理
         while ($currentDate <= $today) {
             foreach ($halls as $hall) {
                 $formattedCurrentDate = $currentDate->format('Y-m-d');
