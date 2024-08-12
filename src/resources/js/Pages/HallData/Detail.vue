@@ -292,11 +292,13 @@ th.sticky {
         </div>
       </form>
 
-      <div class="my-8">
+      <div
+        v-if="floorMapImagePath"
+        class="my-8"
+      >
         <h2 class="text-l sm:text-lg sm:text-2xl font-bold">フロアマップ</h2>
+        <img :src=floorMapImagePath alt="Seating Chart">
       </div>
-
-      <img v-if="floorMapImagePath" :src=floorMapImagePath alt="Seating Chart">
 
       <div class="my-8">
         <h2 class="text-lg sm:text-2xl font-bold">末尾ごとのデータ</h2>
