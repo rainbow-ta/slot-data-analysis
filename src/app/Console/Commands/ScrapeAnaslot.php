@@ -30,6 +30,8 @@ class ScrapeAnaslot extends Command
      */
     protected $description = 'Scrapes Ana Slot data';
 
+    private const RETENTION_PERIOD_MONTHS = 1;
+
     private $highSettingService;
 
     public function __construct()
@@ -55,11 +57,11 @@ class ScrapeAnaslot extends Command
         }
 
         $today = now();
-        $monthsAgo = now()->subMonths(1);
-        $currentDate = clone $monthsAgo;
+        $dateThreshold = now()->subMonths(self::RETENTION_PERIOD_MONTHS);
+        $currentDate = clone $dateThreshold;
 
         // プログレスバー開始
-        $totalDays = $monthsAgo->diff($today)->days;
+        $totalDays = $dateThreshold->diff($today)->days;
         $progressBar = new ProgressBar($output, $totalDays * count($halls));
         $progressBar->start();
 
@@ -74,6 +76,9 @@ class ScrapeAnaslot extends Command
 
             $currentDate->addDay();
         }
+
+        // データ削除処理
+        HallData::where('date', '<', $dateThreshold)->delete();
 
         // プログレスバー終了
         $progressBar->finish();
