@@ -86,5 +86,7 @@ pint-test:
 	docker compose exec app ./vendor/bin/pint -v --test
 npm-dev:
 	docker compose exec app npm run dev
+npm-build:
+	docker compose exec app npm run build
 scrape:
 	docker compose exec app php artisan command:scrape-anaslot

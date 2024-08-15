@@ -10,6 +10,17 @@ defineProps({
 });
 </script>
 
+<style>
+.ql-indent-1 {
+  margin-left: 2rem;
+  padding: 0;
+}
+.ql-indent-2 {
+  margin-left: 4rem;
+  padding: 0;
+}
+</style>
+
 <template>
   <base-layout>
     <template #main>
@@ -50,7 +61,7 @@ defineProps({
                       <div v-html="hall.external_url" class="cursor-pointer"></div>
                     </td>
                     <td class="hidden sm:table-cell px-2 sm:px-6 py-4 font-medium">
-                      <div v-html="hall.note"></div>
+                      <div class="prose lg:prose-sm" v-html="hall.note"></div>
                     </td>
                     <td class="hidden sm:table-cell px-2 sm:px-6 py-4 font-medium">
                       <div>{{ hall.updated_at }}</div>
