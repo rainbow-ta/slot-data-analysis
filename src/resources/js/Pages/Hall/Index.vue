@@ -19,6 +19,10 @@ defineProps({
   margin-left: 4rem;
   padding: 0;
 }
+.ql-indent-3 {
+  margin-left: 6rem;
+  padding: 0;
+}
 </style>
 
 <template>
