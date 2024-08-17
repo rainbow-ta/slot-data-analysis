@@ -20,6 +20,7 @@ build:
 	docker compose build
 up:
 	docker compose up -d
+	docker compose exec app npm run dev
 stop:
 	docker compose stop
 down:
