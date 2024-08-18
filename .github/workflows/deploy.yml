@@ -35,8 +35,6 @@ jobs:
             cd /var/www/slot-data-analysis/src/
             git pull
             php artisan migrate --force
-      - name: List build directory # debug
-        run: ls -al ./src/public/build/
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
