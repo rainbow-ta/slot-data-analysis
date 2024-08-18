@@ -25,11 +25,6 @@ jobs:
       - name: Build
         working-directory: ./src
         run: npm run build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          name: build
-          path: ./src/public/build
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -40,3 +35,4 @@ jobs:
             cd /var/www/slot-data-analysis/src/
             git pull
             php artisan migrate --force
+            rsync -avz ./src/public/build/ ${{ secrets.WEB_SERVER_USER_NAME }}@${{ secrets.WEB_SERVER_HOST }}:/var/www/slot-data-analysis/src/public/build/
