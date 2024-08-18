@@ -43,4 +43,5 @@ jobs:
           key: ${{ secrets.WEB_SERVER_PRIVATE_KEY }}
           source: ./src/public/build/
           target: /var/www/slot-data-analysis/src/public/build/
+          overwrite: true
           debug: true
