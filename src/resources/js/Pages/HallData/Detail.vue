@@ -127,6 +127,7 @@ const resetForm = () => {
 
 // TODO:他の画面でも使う処理を共通化する
 const matsubiNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const dayOfWeekMap = ['日', '月', '火', '水', '木', '金', '土'];
 
 function highlightColorForTotal(value) {
   const maxTotal = Math.max(...Object.values(props.matsubiTotals).map(item => item['total']));
@@ -191,6 +192,15 @@ const generateData = (data) => {
       }
     ]
   }
+}
+
+const formattedDate = (dateValue) => {
+  const date = new Date(dateValue);
+  const dayOfWeek = date.getDay();
+  // yyyy-mm-dd 曜日 の形式でフォーマット
+  const formattedDate = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}（${dayOfWeekMap[dayOfWeek]}）`;
+
+  return formattedDate;
 }
 </script>
 
@@ -274,7 +284,7 @@ th.sticky {
                 :value="date"
                 :key="date"
               >
-                {{ date }}
+                {{ formattedDate(date) }}
               </option>
             </select>
           </div>
@@ -314,11 +324,11 @@ th.sticky {
               <th class="px-4 py-2">末尾</th>
               <th class="px-4 py-2">合計</th>
               <th
-                v-for="(item, key) in matsubiArray"
-                :key="key"
+                v-for="(item, date) in matsubiArray"
+                :key="date"
                 class="px-4 py-2"
               >
-                {{ key }}
+                {{ formattedDate(date) }}
               </th>
             </tr>
           </thead>
@@ -416,7 +426,7 @@ th.sticky {
                 :key="date"
                 class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
               >
-                {{ date }}
+                {{ formattedDate(date) }}
               </th>
             </tr>
           </thead>
@@ -468,7 +478,7 @@ th.sticky {
                 :key="date"
                 class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
               >
-                {{ date }}
+                {{ formattedDate(date) }}
               </th>
             </tr>
           </thead>
