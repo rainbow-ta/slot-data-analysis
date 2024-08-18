@@ -30,7 +30,7 @@ class ScrapeAnaslot extends Command
      */
     protected $description = 'Scrapes Ana Slot data';
 
-    private const RETENTION_PERIOD_MONTHS = 1;
+    private const RETENTION_PERIOD_MONTHS = 3;
 
     private $highSettingService;
 
