@@ -41,5 +41,5 @@ jobs:
           host: ${{ secrets.WEB_SERVER_HOST }}
           username: ${{ secrets.WEB_SERVER_USER_NAME }}
           key: ${{ secrets.WEB_SERVER_PRIVATE_KEY }}
-          source: "/var/www/slot-data-analysis/src/public/build/"
+          source: /src/public/build/
           target: /var/www/slot-data-analysis/src/public/build/
