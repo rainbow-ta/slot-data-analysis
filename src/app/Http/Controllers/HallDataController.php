@@ -74,6 +74,9 @@ class HallDataController extends Controller
         // 高設定データを台番号末尾ごとに集計
         $matstubiArray = $hallDataService->matsubiCount($hallData);
 
+        // 機種ごとの全データを取得
+        $allSlotMachineData = $hallDataService->formatAllSlotMachineData($hallData);
+
         // 全てのデータを取得
         $allDateData = $hallDataService->getAllDateData($hallData);
 
@@ -85,7 +88,7 @@ class HallDataController extends Controller
             'highSettingMachines' => $hallDataService->calculateHighSettingMachines($hallData),
             'allDate' => $hallData->unique('date')->pluck('date'),
             'selectedAllDates' => HallData::whereHallId($hallId)->distinct('date')->orderBy('date', 'desc')->pluck('date'),
-            'allDateData' => $allDateData,
+            'allSlotMachineData' => $allSlotMachineData,
             'uniqueDateCount' => $hallData->unique('date')->count(),
             'slumpSlotNumbers' => $hallDataService->calculateSlumpSlotNumbers($allDateData),
             'startDate' => $startDate,

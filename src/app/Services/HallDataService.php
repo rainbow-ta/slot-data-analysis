@@ -144,6 +144,48 @@ class HallDataService
         return $highSettingMachines;
     }
 
+    public function formatAllSlotMachineData($hallData)
+    {
+        $slotMachines = [];
+
+        foreach ($hallData as $data) {
+            $date = $data['date'];
+            $slotNumber = $data['slot_number'];
+            $machineName = $data['slotMachine']['name'];
+
+            if (!isset($slotMachines[$machineName][$slotNumber])) {
+                $slotMachines[$machineName][$slotNumber] = [];
+            }
+
+            if (!isset($slotMachines[$machineName][$slotNumber][$date])) {
+                $slotMachines[$machineName][$slotNumber][$date] = [];
+            }
+
+            $slotMachines[$machineName][$slotNumber][$date]['game_count'] = $data['game_count'];
+            $slotMachines[$machineName][$slotNumber][$date]['difference_coins'] = $data['difference_coins'];
+            $slotMachines[$machineName][$slotNumber][$date]['big_bonus_count'] = $data['big_bonus_count'];
+            $slotMachines[$machineName][$slotNumber][$date]['regular_bonus_count'] = $data['regular_bonus_count'];
+            $slotMachines[$machineName][$slotNumber][$date]['art_count'] = $data['art_count'];
+            $slotMachines[$machineName][$slotNumber][$date]['synthesis_probability'] = $data['synthesis_probability'];
+            $slotMachines[$machineName][$slotNumber][$date]['big_bonus_probability'] = $data['big_bonus_probability'];
+            $slotMachines[$machineName][$slotNumber][$date]['regular_bonus_probability'] = $data['regular_bonus_probability'];
+            $slotMachines[$machineName][$slotNumber][$date]['art_probability'] = $data['art_probability'];
+            $slotMachines[$machineName][$slotNumber][$date]['is_high_setting'] = $data['is_high_setting'];
+        }
+
+        // $slotMachinesを日付の数でソート
+        uasort($slotMachines, function ($a, $b) {
+            // 比較するのは日付の数、要素数を比較
+            $countA = count($a);
+            $countB = count($b);
+
+            // 要素数が多い方を前にするための比較
+            return $countB <=> $countA;
+        });
+
+        return $slotMachines;
+    }
+
     /**
      * ホールデータを基に高設定の台番号データを返却する
      *

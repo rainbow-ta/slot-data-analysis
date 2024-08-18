@@ -57,7 +57,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  allDateData: {
+  allSlotMachineData: {
     type: Object,
     required: true,
   },
@@ -367,10 +367,10 @@ th.sticky {
         <h2 class="text-lg sm:text-2xl font-bold">台番号ごとの高設定投入率</h2>
       </div>
 
-      <div class="table-container inline-block">
+      <div class="table-container">
         <table
           v-if="highSettingSlotNumbers.length > 0"
-          class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          class="table-auto text-sm text-left rtl:text-right text-gray-500"
         >
           <thead class="text-xs text-gray-700 uppercase bg-gray-200">
             <tr>
@@ -462,52 +462,64 @@ th.sticky {
       </div>
 
       <div class="my-8">
-        <h2 class="text-lg sm:text-2xl font-bold">日付ごとのデータ</h2>
+        <h2 class="text-lg sm:text-2xl font-bold">詳細データ</h2>
       </div>
 
-      <div class="table-container">
-        <table
-          v-if="Object.keys(allDateData).length > 0"
-          class="table-auto text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+      <template
+        v-if="Object.keys(allSlotMachineData).length > 0"
+      >
+        <template
+          v-for="(slotMachineData, slotMachineName) in allSlotMachineData"
         >
-          <thead class="text-xs text-gray-700 uppercase">
-            <tr>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
-              <th
-                v-for="date in allDate"
-                :key="date"
-                class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
-              >
-                {{ formattedDate(date) }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(dateData, slotNumber) in allDateData" :key="slotNumber">
-              <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ slotNumber }}</th>
-              <td
-                v-for="(item, date) in dateData"
-                :key="date"
-                :class="{ 'bg-red-200': item.is_high_setting }"
-                class="border px-4 py-2 text-gray-700"
-              >
-                <div class="truncate">{{ truncateText(item.name) }}</div>
-                <div>{{ item.game_count?.toLocaleString('ja-JP') }}G</div>
-                <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(item.difference_coins) }">
-                  {{ formatDifferenceCoins(item.difference_coins?.toLocaleString('ja-JP')) }}枚
-                </div>
-                <div>B:{{ item.big_bonus_count }}（{{ item.big_bonus_probability }}）</div>
-                <div>R:{{ item.regular_bonus_count }}（{{ item.regular_bonus_probability }}）</div>
-                <div>合成確率:{{ item.synthesis_probability }}</div>
-                <div>ART:{{ item.art_count }}（{{ item.art_probability }}）</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <table v-else>
-          {{ dataNotFoundMessage }}
-        </table>
-      </div>
+          <h3 class="text-base font-bold">{{ slotMachineName }}</h3>
+
+          <div class="table-container mt-4 mb-8">
+            <table
+              class="table-auto text-sm text-left rtl:text-right text-gray-500"
+            >
+              <thead class="text-xs text-gray-700 uppercase bg-gray-200">
+                <tr>
+                  <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
+                  <th
+                    v-for="date in allDate"
+                    :key="date"
+                    class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+                  >
+                    {{ formattedDate(date) }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="(data, slotNumber) in slotMachineData"
+                  :key="slotNumber"
+                >
+                  <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ slotNumber }}</th>
+                  <td
+                    v-for="date in allDate"
+                    :key="date"
+                    class="border px-4 py-2 text-gray-700"
+                  >
+                    <td v-if="data[date]">
+                      <div>{{ data[date]['game_count']?.toLocaleString('ja-JP') }}G</div>
+                      <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(data[date]['difference_coins']) }">
+                        {{ formatDifferenceCoins(data[date]['difference_coins']?.toLocaleString('ja-JP')) }}枚
+                      </div>
+                      <div>B:{{ data[date]['big_bonus_count'] }}（{{ data[date]['big_bonus_probability'] }}）</div>
+                      <div>R:{{ data[date]['regular_bonus_count'] }}（{{ data[date]['regular_bonus_probability'] }}）</div>
+                      <div>合成確率:{{ data[date]['synthesis_probability'] }}</div>
+                      <div>ART:{{ data[date]['art_count'] }}（{{ data[date]['art_probability'] }}）</div>
+                    </td>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </template>
+      </template>
+      <template v-else>
+        {{ dataNotFoundMessage }}
+      </template>
 
       <div class="my-8">
         <h2 class="text-lg sm:text-2xl font-bold">台番号ごとのスランプグラフ</h2>
@@ -520,7 +532,7 @@ th.sticky {
           v-for="(data, slotNumber) in slumpSlotNumbers"
           class="mb-8"
         >
-          <h3 class="text-xl font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
+          <h3 class="text-base font-bold">{{ slotNumber }}番台：{{ data['slotName'] }}</h3>
 
           <div style="height:300px;">
             <Line :data=generateData(data) :options=generateOptions(data) />
