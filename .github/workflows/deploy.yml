@@ -42,6 +42,6 @@ jobs:
           username: ${{ secrets.WEB_SERVER_USER_NAME }}
           key: ${{ secrets.WEB_SERVER_PRIVATE_KEY }}
           source: ./src/public/build/
-          target: /var/www/slot-data-analysis/src/public/build/
-          overwrite: true
+          target: /var/www/slot-data-analysis/src/public/
           strip_components: 3
+          overwrite: true
