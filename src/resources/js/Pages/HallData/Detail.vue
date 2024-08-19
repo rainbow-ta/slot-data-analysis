@@ -471,19 +471,23 @@ th.sticky {
         <template
           v-for="(slotMachineData, slotMachineName) in allSlotMachineData"
         >
-          <h3 class="text-base font-bold">{{ slotMachineName }}</h3>
+          <h3 class="text-base font-bold mt-6 mb-4">{{ slotMachineName }}</h3>
 
-          <div class="table-container mt-4 mb-8">
+          <div class="h-[350px] w-[335px] sm:h-[600px] sm:w-[1200px] overflow-scroll">
             <table
-              class="table-auto text-sm text-left rtl:text-right text-gray-500"
+              class="text-sm text-left rtl:text-right text-gray-500"
             >
               <thead class="text-xs text-gray-700 uppercase bg-gray-200">
                 <tr>
-                  <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
+                  <th
+                    class="text-xs sm:text-sm sticky left-0 top-0 z-30 max-h-[2rem] min-h-[2rem] min-w-[4rem] max-w-[6rem] bg-gray-200 p-[0.5rem]"
+                  >
+                    台番号
+                  </th>
                   <th
                     v-for="date in allDate"
                     :key="date"
-                    class="sticky top-0 z-10 px-4 py-2 bg-gray-200"
+                    class="text-xs sm:text-sm text-nowrap sticky left-0 top-0 z-20 max-h-[2rem] min-h-[2rem] min-w-[6rem] max-w-[8rem] bg-gray-200 p-[0.5rem]"
                   >
                     {{ formattedDate(date) }}
                   </th>
@@ -494,13 +498,13 @@ th.sticky {
                   v-for="(data, slotNumber) in slotMachineData"
                   :key="slotNumber"
                 >
-                  <th class="sticky left-0 bg-gray-200 px-4 py-2 text-gray-700">{{ slotNumber }}</th>
+                  <th class="text-xs sm:text-sm sticky left-0 z-10 max-h-[2rem] min-h-[2rem] min-w-[4rem] max-w-[6rem] bg-gray-200 text-gray-700 p-[0.5rem]">{{ slotNumber }}</th>
                   <td
                     v-for="date in allDate"
                     :key="date"
-                    class="border px-4 py-2 text-gray-700"
+                    class="text-xs sm:text-sm text-nowrap max-h-[2rem] min-h-[2rem] min-w-[6rem] max-w-[6rem] p-[0.5rem] text-gray-700"
                   >
-                    <td v-if="data[date]">
+                    <template v-if="data[date]">
                       <div>{{ data[date]['game_count']?.toLocaleString('ja-JP') }}G</div>
                       <div :class="{ 'text-red-500': highlightColorForDifferenceCoins(data[date]['difference_coins']) }">
                         {{ formatDifferenceCoins(data[date]['difference_coins']?.toLocaleString('ja-JP')) }}枚
@@ -509,7 +513,7 @@ th.sticky {
                       <div>R:{{ data[date]['regular_bonus_count'] }}（{{ data[date]['regular_bonus_probability'] }}）</div>
                       <div>合成確率:{{ data[date]['synthesis_probability'] }}</div>
                       <div>ART:{{ data[date]['art_count'] }}（{{ data[date]['art_probability'] }}）</div>
-                    </td>
+                    </template>
                   </td>
                 </tr>
               </tbody>
