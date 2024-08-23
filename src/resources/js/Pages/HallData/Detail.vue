@@ -317,7 +317,7 @@ th.sticky {
       <template
         v-if="Object.keys(matsubiArray).length > 0"
       >
-        <div class="h-[415px] w-[335px] md:w-[700px] xl:w-[1400px] overflow-scroll">
+        <div class="h-[355px] w-[335px] md:w-[700px] xl:w-[1400px] overflow-scroll">
           <table
             class="text-sm text-left rtl:text-right text-gray-500"
           >
@@ -378,18 +378,18 @@ th.sticky {
         <h2 class="text-lg sm:text-2xl font-bold">台番号ごとの高設定投入率</h2>
       </div>
 
-      <div class="table-container">
+      <div class="h-[415px] w-[335px] md:w-[700px] xl:w-[795px] overflow-scroll">
         <table
           v-if="highSettingSlotNumbers.length > 0"
-          class="table-auto text-sm text-left rtl:text-right text-gray-500"
+          class="text-sm text-left rtl:text-right text-gray-500"
         >
           <thead class="text-xs text-gray-700 uppercase bg-gray-200">
             <tr>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">台番号</th>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">機種名</th>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">投入率</th>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">平均G数</th>
-              <th class="sticky top-0 z-10 px-4 py-2 bg-gray-200">平均機械割</th>
+              <th class="text-xs sm:text-sm sticky left-0 top-0 z-30 max-h-[2rem] min-h-[2rem] min-w-[4rem] max-w-[6rem] bg-gray-200 p-[0.5rem]">台番号</th>
+              <th class="text-xs sm:text-sm text-nowrap sticky left-0 top-0 z-20 max-h-[2rem] min-h-[2rem] min-w-[6rem] max-w-[8rem] bg-gray-200 p-[0.5rem]">機種名</th>
+              <th class="text-xs sm:text-sm text-nowrap sticky left-0 top-0 z-20 max-h-[2rem] min-h-[2rem] min-w-[6rem] max-w-[8rem] bg-gray-200 p-[0.5rem]">投入率</th>
+              <th class="text-xs sm:text-sm text-nowrap sticky left-0 top-0 z-20 max-h-[2rem] min-h-[2rem] min-w-[6rem] max-w-[8rem] bg-gray-200 p-[0.5rem]">平均G数</th>
+              <th class="text-xs sm:text-sm text-nowrap sticky left-0 top-0 z-20 max-h-[2rem] min-h-[2rem] min-w-[6rem] max-w-[8rem] bg-gray-200 p-[0.5rem]">平均機械割</th>
             </tr>
           </thead>
           <tbody>
@@ -397,7 +397,7 @@ th.sticky {
               v-for="slotNumber in highSettingSlotNumbers"
               :key="slotNumber"
             >
-              <td class="border px-4 py-2 text-gray-700">{{ slotNumber.slot_number }}</td>
+              <td class="text-xs sm:text-sm sticky left-0 z-10 max-h-[2rem] min-h-[2rem] min-w-[4rem] max-w-[6rem] bg-gray-200 text-gray-700 p-[0.5rem]">{{ slotNumber.slot_number }}</td>
               <td class="border px-4 py-2 text-gray-700">{{ slotNumber.slot_machine_name }}</td>
               <td
                 :class="{
